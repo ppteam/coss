@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.googlecode.coss.biz.base.model.CustomerBiz">
+	<!-- open cache -->
+	<cache type="org.mybatis.caches.ehcache.EhcacheCache"/>
+
+	<resultMap id="com.googlecode.coss.biz.base.CustomerBiz.RM" type="com.googlecode.coss.biz.base.model.CustomerBiz">
+        <result property="bizId" column="biz_id"/>
+        <result property="cusId" column="cus_id"/>
+        <result property="consultant" column="consultant"/>
+        <result property="cs" column="cs"/>
+        <result property="cooperation" column="cooperation"/>
+        <result property="cusLevel" column="cus_level"/>
+        <result property="gmcLevel" column="gmc_level"/>
+        <result property="receiptAddress" column="receipt_address"/>
+        <result property="backupAddress1" column="backup_address1"/>
+        <result property="backupAddress2" column="backup_address2"/>
+        <result property="shippingArea" column="shipping_area"/>
+        <result property="status" column="status"/>
+        <result property="createBy" column="create_by"/>
+        <result property="createTime" column="create_time"/>
+        <result property="updateBy" column="update_by"/>
+        <result property="updateTime" column="update_time"/>
+	</resultMap>
+	
+	<!-- 用于select查询公用抽取的列 -->
+	<sql id="columns">
+	    <![CDATA[
+		biz_id,cus_id,consultant,cs,cooperation,cus_level,gmc_level,receipt_address,backup_address1,backup_address2,shipping_area,status,create_by,create_time,update_by,update_time
+	    ]]>
+	</sql>
+	
+	<sql id="where">
+		<!-- ognl访问静态方法的表达式 为@class@method(args),以下为调用Ognl.isNotEmpty()方法,具体请查看Ognl类 -->
+		<where>	      				
+			<if test="@.Ognl@isNotEmpty(bizId)">
+				<if test="@.Ognl@isNotEmpty(conditions.bizId)">${conditions.bizId.condition}</if> biz_id <if test="@.Ognl@isNotEmpty(conditions.bizId)">${conditions.bizId.compare.value}</if> #{bizId}
+			</if>
+			<if test="@.Ognl@isNotEmpty(cusId)">
+				<if test="@.Ognl@isNotEmpty(conditions.cusId)">${conditions.cusId.condition}</if> cus_id <if test="@.Ognl@isNotEmpty(conditions.cusId)">${conditions.cusId.compare.value}</if> #{cusId}
+			</if>
+			<if test="@.Ognl@isNotEmpty(consultant)">
+				<if test="@.Ognl@isNotEmpty(conditions.consultant)">${conditions.consultant.condition}</if> consultant <if test="@.Ognl@isNotEmpty(conditions.consultant)">${conditions.consultant.compare.value}</if> #{consultant}
+			</if>
+			<if test="@.Ognl@isNotEmpty(cs)">
+				<if test="@.Ognl@isNotEmpty(conditions.cs)">${conditions.cs.condition}</if> cs <if test="@.Ognl@isNotEmpty(conditions.cs)">${conditions.cs.compare.value}</if> #{cs}
+			</if>
+			<if test="@.Ognl@isNotEmpty(cooperation)">
+				<if test="@.Ognl@isNotEmpty(conditions.cooperation)">${conditions.cooperation.condition}</if> cooperation <if test="@.Ognl@isNotEmpty(conditions.cooperation)">${conditions.cooperation.compare.value}</if> #{cooperation}
+			</if>
+			<if test="@.Ognl@isNotEmpty(cusLevel)">
+				<if test="@.Ognl@isNotEmpty(conditions.cusLevel)">${conditions.cusLevel.condition}</if> cus_level <if test="@.Ognl@isNotEmpty(conditions.cusLevel)">${conditions.cusLevel.compare.value}</if> #{cusLevel}
+			</if>
+			<if test="@.Ognl@isNotEmpty(gmcLevel)">
+				<if test="@.Ognl@isNotEmpty(conditions.gmcLevel)">${conditions.gmcLevel.condition}</if> gmc_level <if test="@.Ognl@isNotEmpty(conditions.gmcLevel)">${conditions.gmcLevel.compare.value}</if> #{gmcLevel}
+			</if>
+			<if test="@.Ognl@isNotEmpty(receiptAddress)">
+				<if test="@.Ognl@isNotEmpty(conditions.receiptAddress)">${conditions.receiptAddress.condition}</if> receipt_address <if test="@.Ognl@isNotEmpty(conditions.receiptAddress)">${conditions.receiptAddress.compare.value}</if> #{receiptAddress}
+			</if>
+			<if test="@.Ognl@isNotEmpty(backupAddress1)">
+				<if test="@.Ognl@isNotEmpty(conditions.backupAddress1)">${conditions.backupAddress1.condition}</if> backup_address1 <if test="@.Ognl@isNotEmpty(conditions.backupAddress1)">${conditions.backupAddress1.compare.value}</if> #{backupAddress1}
+			</if>
+			<if test="@.Ognl@isNotEmpty(backupAddress2)">
+				<if test="@.Ognl@isNotEmpty(conditions.backupAddress2)">${conditions.backupAddress2.condition}</if> backup_address2 <if test="@.Ognl@isNotEmpty(conditions.backupAddress2)">${conditions.backupAddress2.compare.value}</if> #{backupAddress2}
+			</if>
+			<if test="@.Ognl@isNotEmpty(shippingArea)">
+				<if test="@.Ognl@isNotEmpty(conditions.shippingArea)">${conditions.shippingArea.condition}</if> shipping_area <if test="@.Ognl@isNotEmpty(conditions.shippingArea)">${conditions.shippingArea.compare.value}</if> #{shippingArea}
+			</if>
+			<if test="@.Ognl@isNotEmpty(status)">
+				<if test="@.Ognl@isNotEmpty(conditions.status)">${conditions.status.condition}</if> status <if test="@.Ognl@isNotEmpty(conditions.status)">${conditions.status.compare.value}</if> #{status}
+			</if>
+			<if test="@.Ognl@isNotEmpty(createBy)">
+				<if test="@.Ognl@isNotEmpty(conditions.createBy)">${conditions.createBy.condition}</if> create_by <if test="@.Ognl@isNotEmpty(conditions.createBy)">${conditions.createBy.compare.value}</if> #{createBy}
+			</if>
+			<if test="@.Ognl@isNotEmpty(createTimeBegin)">
+				AND create_time >= #{createTimeBegin}
+			</if>
+			<if test="@.Ognl@isNotEmpty(createTimeEnd)">
+				AND create_time &lt;= #{createTimeEnd}
+			</if>
+			<if test="@.Ognl@isNotEmpty(updateBy)">
+				<if test="@.Ognl@isNotEmpty(conditions.updateBy)">${conditions.updateBy.condition}</if> update_by <if test="@.Ognl@isNotEmpty(conditions.updateBy)">${conditions.updateBy.compare.value}</if> #{updateBy}
+			</if>
+			<if test="@.Ognl@isNotEmpty(updateTimeBegin)">
+				AND update_time >= #{updateTimeBegin}
+			</if>
+			<if test="@.Ognl@isNotEmpty(updateTimeEnd)">
+				AND update_time &lt;= #{updateTimeEnd}
+			</if>
+		</where>
+	</sql>
+
+	<!-- useGeneratedKeys="true" keyProperty="xxx" for sqlserver and mysql -->
+	<insert id="insert" useGeneratedKeys="true" keyProperty="bizId">
+    <![CDATA[
+        INSERT INTO mfg$customer_biz (
+        	biz_id ,
+        	cus_id ,
+        	consultant ,
+        	cs ,
+        	cooperation ,
+        	cus_level ,
+        	gmc_level ,
+        	receipt_address ,
+        	backup_address1 ,
+        	backup_address2 ,
+        	shipping_area ,
+        	status ,
+        	create_by ,
+        	create_time ,
+        	update_by ,
+        	update_time 
+        ) VALUES (
+        	#{bizId} ,
+        	#{cusId} ,
+        	#{consultant} ,
+        	#{cs} ,
+        	#{cooperation} ,
+        	#{cusLevel} ,
+        	#{gmcLevel} ,
+        	#{receiptAddress} ,
+        	#{backupAddress1} ,
+        	#{backupAddress2} ,
+        	#{shippingArea} ,
+        	#{status} ,
+        	#{createBy} ,
+        	#{createTime} ,
+        	#{updateBy} ,
+        	#{updateTime} 
+        )
+    ]]>
+	    	<selectKey resultType="java.lang.Long" order="BEFORE" keyProperty="bizId">
+				SELECT LAST_INSERT_ID()
+	        </selectKey>
+	</insert>
+    
+	<update id="update" >
+    <![CDATA[
+        UPDATE mfg$customer_biz SET
+	        cus_id = #{cusId} ,
+	        consultant = #{consultant} ,
+	        cs = #{cs} ,
+	        cooperation = #{cooperation} ,
+	        cus_level = #{cusLevel} ,
+	        gmc_level = #{gmcLevel} ,
+	        receipt_address = #{receiptAddress} ,
+	        backup_address1 = #{backupAddress1} ,
+	        backup_address2 = #{backupAddress2} ,
+	        shipping_area = #{shippingArea} ,
+	        status = #{status} ,
+	        create_by = #{createBy} ,
+	        create_time = #{createTime} ,
+	        update_by = #{updateBy} ,
+	        update_time = #{updateTime} 
+        WHERE 
+	        biz_id = #{bizId} 
+    ]]>
+	</update>
+
+    <delete id="delete">
+    <![CDATA[
+        DELETE FROM mfg$customer_biz WHERE
+        biz_id = #{id} 
+    ]]>
+    </delete>
+    
+	<delete id="deleteIds">
+	<![CDATA[
+		DELETE FROM mfg$customer_biz WHERE
+        biz_id
+		 in 
+	]]>
+		<foreach collection="array" item="ids" open="(" separator="," close=")">#{ids}</foreach>
+	</delete>
+    
+    <select id="getById" resultMap="com.googlecode.coss.biz.base.CustomerBiz.RM">
+		SELECT <include refid="columns" />
+	    <![CDATA[
+		    FROM mfg$customer_biz 
+	        WHERE 
+		        biz_id = #{id} 
+	    ]]>
+	</select>
+		
+    <select id="count" resultType="long">
+        SELECT count(*) FROM mfg$customer_biz 
+		<include refid="where"/>
+    </select>
+    
+    <!--
+    	分页查询已经使用Dialect进行分页,也可以不使用Dialect直接编写分页
+    	因为分页查询将传 offset,pageSize,lastRows 三个参数,不同的数据库可以根于此三个参数属性应用不同的分页实现
+    -->
+    <select id="findPage" resultMap="com.googlecode.coss.biz.base.CustomerBiz.RM">
+    	SELECT <include refid="columns" />
+	    FROM mfg$customer_biz
+		<include refid="where"/>
+		<if test="@.Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+    </select>
+	
+	<select id="findAll" resultMap="com.googlecode.coss.biz.base.CustomerBiz.RM">
+		SELECT <include refid="columns" />
+	    <![CDATA[
+		    FROM mfg$customer_biz 
+	    ]]>
+	    <if test="@.Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+	</select>
+	
+	<select id="find" resultMap="com.googlecode.coss.biz.base.CustomerBiz.RM">
+		SELECT <include refid="columns" />
+	    <![CDATA[
+		    FROM mfg$customer_biz 
+	    ]]>
+	    <include refid="where"/>
+	    <if test="@.Ognl@isNotEmpty(sortColumns)">
+			ORDER BY ${sortColumns}
+		</if>
+	</select>
+
+	
+
+</mapper>

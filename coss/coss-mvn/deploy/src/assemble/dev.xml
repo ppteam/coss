@@ -1,0 +1,25 @@
+<assembly>
+	<id>dev</id>
+	<formats>
+		<format>dir</format>
+	</formats>
+	<includeBaseDirectory>false</includeBaseDirectory>
+	<fileSets>
+		<!--
+		<fileSet>
+			<directory>META-INF</directory>
+			<outputDirectory>META-INF</outputDirectory>
+		</fileSet>
+		-->
+	</fileSets>
+	<dependencySets>
+		<dependencySet>
+			<includes>
+				<include>com.googlecode.coss:coss.web.home:war</include>
+			</includes>
+			<useTransitiveDependencies>true</useTransitiveDependencies>
+			<outputFileNameMapping>coss.war</outputFileNameMapping>
+			<unpack>false</unpack>
+		</dependencySet>
+	</dependencySets>
+</assembly>
