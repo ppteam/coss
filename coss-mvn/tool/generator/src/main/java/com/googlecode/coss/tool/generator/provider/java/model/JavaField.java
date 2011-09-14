@@ -6,65 +6,66 @@ import java.lang.reflect.Field;
 import com.googlecode.coss.tool.generator.util.typemapping.ActionScriptDataTypesUtils;
 
 public class JavaField {
-	private Field field;
-	private JavaClass clazz; //与field相关联的class
+    private Field     field;
+    private JavaClass clazz; //与field相关联的class
 
-	public JavaField(Field field, JavaClass clazz) {
-		super();
-		this.field = field;
-		this.clazz = clazz;
-	}
+    public JavaField(Field field, JavaClass clazz) {
+        super();
+        this.field = field;
+        this.clazz = clazz;
+    }
 
-	public String getFieldName() {
-		return field.getName();
-	}
+    public String getFieldName() {
+        return field.getName();
+    }
 
-	public JavaClass getClazz() {
-		return clazz;
-	}
+    public JavaClass getClazz() {
+        return clazz;
+    }
 
-	public String getJavaType() {
-		return field.getType().getName();
-	}
+    public String getJavaType() {
+        return field.getType().getName();
+    }
 
-	public String getAsType() {
-		return ActionScriptDataTypesUtils.getPreferredAsType(getJavaType());
-	}
+    public String getAsType() {
+        return ActionScriptDataTypesUtils.getPreferredAsType(getJavaType());
+    }
 
-	public Annotation[] getAnnotations() {
-		return field.getAnnotations();
-	}
+    public Annotation[] getAnnotations() {
+        return field.getAnnotations();
+    }
 
-	public boolean getIsDateTimeField() {
-		return getJavaType().equalsIgnoreCase("java.util.Date") || getJavaType().equalsIgnoreCase("java.sql.Date")
-				|| getJavaType().equalsIgnoreCase("java.sql.Timestamp")
-				|| getJavaType().equalsIgnoreCase("java.sql.Time");
-	}
+    public boolean getIsDateTimeField() {
+        return getJavaType().equalsIgnoreCase("java.util.Date")
+                || getJavaType().equalsIgnoreCase("java.sql.Date")
+                || getJavaType().equalsIgnoreCase("java.sql.Timestamp")
+                || getJavaType().equalsIgnoreCase("java.sql.Time");
+    }
 
-	public int hashCode() {
-		final int prime = 31;
-		int result = 1;
-		result = prime * result + ((field == null) ? 0 : field.hashCode());
-		return result;
-	}
+    public int hashCode() {
+        final int prime = 31;
+        int result = 1;
+        result = prime * result + ((field == null) ? 0 : field.hashCode());
+        return result;
+    }
 
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (obj == null)
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		JavaField other = (JavaField) obj;
-		if (field == null) {
-			if (other.field != null)
-				return false;
-		} else if (!field.equals(other.field))
-			return false;
-		return true;
-	}
+    public boolean equals(Object obj) {
+        if (this == obj)
+            return true;
+        if (obj == null)
+            return false;
+        if (getClass() != obj.getClass())
+            return false;
+        JavaField other = (JavaField) obj;
+        if (field == null) {
+            if (other.field != null)
+                return false;
+        } else if (!field.equals(other.field))
+            return false;
+        return true;
+    }
 
-	public String toString() {
-		return "JavaClass:" + clazz + " JavaField:" + getFieldName();
-	}
+    public String toString() {
+        return "JavaClass:" + clazz + " JavaField:" + getFieldName();
+    }
 }

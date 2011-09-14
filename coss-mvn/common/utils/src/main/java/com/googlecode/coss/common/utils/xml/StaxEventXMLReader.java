@@ -48,9 +48,10 @@ import com.googlecode.coss.common.utils.lang.StringUtils;
 import com.googlecode.coss.common.utils.lang.exception.Assert;
 
 /**
- * SAX <code>XMLReader</code> that reads from a StAX <code>XMLEventReader</code>. Consumes <code>XMLEvents</code> from
- * an <code>XMLEventReader</code>, and calls the corresponding methods on the SAX callback interfaces.
- *
+ * SAX <code>XMLReader</code> that reads from a StAX <code>XMLEventReader</code>
+ * . Consumes <code>XMLEvents</code> from an <code>XMLEventReader</code>, and
+ * calls the corresponding methods on the SAX callback interfaces.
+ * 
  * @author Arjen Poutsma
  * @see XMLEventReader
  * @see #setContentHandler(org.xml.sax.ContentHandler)
@@ -61,285 +62,292 @@ import com.googlecode.coss.common.utils.lang.exception.Assert;
  */
 class StaxEventXMLReader extends AbstractStaxXMLReader {
 
-	private static final String DEFAULT_XML_VERSION = "1.0";
+    private static final String       DEFAULT_XML_VERSION = "1.0";
 
-	private final XMLEventReader reader;
+    private final XMLEventReader      reader;
 
-	private final Map<String, String> namespaces = new LinkedHashMap<String, String>();
+    private final Map<String, String> namespaces          = new LinkedHashMap<String, String>();
 
-	private String xmlVersion = DEFAULT_XML_VERSION;
+    private String                    xmlVersion          = DEFAULT_XML_VERSION;
 
-	private String encoding;
+    private String                    encoding;
 
-	/**
-	 * Constructs a new instance of the <code>StaxEventXmlReader</code> that reads from the given
-	 * <code>XMLEventReader</code>. The supplied event reader must be in <code>XMLStreamConstants.START_DOCUMENT</code> or
-	 * <code>XMLStreamConstants.START_ELEMENT</code> state.
-	 *
-	 * @param reader the <code>XMLEventReader</code> to read from
-	 * @throws IllegalStateException if the reader is not at the start of a document or element
-	 */
-	StaxEventXMLReader(XMLEventReader reader) {
-		Assert.notNull(reader, "'reader' must not be null");
-		try {
-			XMLEvent event = reader.peek();
-			if (event != null && !(event.isStartDocument() || event.isStartElement())) {
-				throw new IllegalStateException("XMLEventReader not at start of document or element");
-			}
-		} catch (XMLStreamException ex) {
-			throw new IllegalStateException("Could not read first element: " + ex.getMessage());
-		}
+    /**
+     * Constructs a new instance of the <code>StaxEventXmlReader</code> that
+     * reads from the given <code>XMLEventReader</code>. The supplied event
+     * reader must be in <code>XMLStreamConstants.START_DOCUMENT</code> or
+     * <code>XMLStreamConstants.START_ELEMENT</code> state.
+     * 
+     * @param reader the <code>XMLEventReader</code> to read from
+     * @throws IllegalStateException if the reader is not at the start of a
+     *             document or element
+     */
+    StaxEventXMLReader(XMLEventReader reader) {
+        Assert.notNull(reader, "'reader' must not be null");
+        try {
+            XMLEvent event = reader.peek();
+            if (event != null && !(event.isStartDocument() || event.isStartElement())) {
+                throw new IllegalStateException(
+                        "XMLEventReader not at start of document or element");
+            }
+        } catch (XMLStreamException ex) {
+            throw new IllegalStateException("Could not read first element: " + ex.getMessage());
+        }
 
-		this.reader = reader;
-	}
+        this.reader = reader;
+    }
 
-	@Override
-	protected void parseInternal() throws SAXException, XMLStreamException {
-		boolean documentStarted = false;
-		boolean documentEnded = false;
-		int elementDepth = 0;
-		while (reader.hasNext() && elementDepth >= 0) {
-			XMLEvent event = reader.nextEvent();
-			if (!event.isStartDocument() && !event.isEndDocument() && !documentStarted) {
-				handleStartDocument(event);
-				documentStarted = true;
-			}
-			switch (event.getEventType()) {
-			case XMLStreamConstants.START_DOCUMENT:
-				handleStartDocument(event);
-				documentStarted = true;
-				break;
-			case XMLStreamConstants.START_ELEMENT:
-				elementDepth++;
-				handleStartElement(event.asStartElement());
-				break;
-			case XMLStreamConstants.END_ELEMENT:
-				elementDepth--;
-				if (elementDepth >= 0) {
-					handleEndElement(event.asEndElement());
-				}
-				break;
-			case XMLStreamConstants.PROCESSING_INSTRUCTION:
-				handleProcessingInstruction((ProcessingInstruction) event);
-				break;
-			case XMLStreamConstants.CHARACTERS:
-			case XMLStreamConstants.SPACE:
-			case XMLStreamConstants.CDATA:
-				handleCharacters(event.asCharacters());
-				break;
-			case XMLStreamConstants.END_DOCUMENT:
-				handleEndDocument();
-				documentEnded = true;
-				break;
-			case XMLStreamConstants.NOTATION_DECLARATION:
-				handleNotationDeclaration((NotationDeclaration) event);
-				break;
-			case XMLStreamConstants.ENTITY_DECLARATION:
-				handleEntityDeclaration((EntityDeclaration) event);
-				break;
-			case XMLStreamConstants.COMMENT:
-				handleComment((Comment) event);
-				break;
-			case XMLStreamConstants.DTD:
-				handleDtd((DTD) event);
-				break;
-			case XMLStreamConstants.ENTITY_REFERENCE:
-				handleEntityReference((EntityReference) event);
-				break;
-			}
-		}
-		if (documentStarted && !documentEnded) {
-			handleEndDocument();
-		}
+    @Override
+    protected void parseInternal() throws SAXException, XMLStreamException {
+        boolean documentStarted = false;
+        boolean documentEnded = false;
+        int elementDepth = 0;
+        while (reader.hasNext() && elementDepth >= 0) {
+            XMLEvent event = reader.nextEvent();
+            if (!event.isStartDocument() && !event.isEndDocument() && !documentStarted) {
+                handleStartDocument(event);
+                documentStarted = true;
+            }
+            switch (event.getEventType()) {
+                case XMLStreamConstants.START_DOCUMENT:
+                    handleStartDocument(event);
+                    documentStarted = true;
+                    break;
+                case XMLStreamConstants.START_ELEMENT:
+                    elementDepth++;
+                    handleStartElement(event.asStartElement());
+                    break;
+                case XMLStreamConstants.END_ELEMENT:
+                    elementDepth--;
+                    if (elementDepth >= 0) {
+                        handleEndElement(event.asEndElement());
+                    }
+                    break;
+                case XMLStreamConstants.PROCESSING_INSTRUCTION:
+                    handleProcessingInstruction((ProcessingInstruction) event);
+                    break;
+                case XMLStreamConstants.CHARACTERS:
+                case XMLStreamConstants.SPACE:
+                case XMLStreamConstants.CDATA:
+                    handleCharacters(event.asCharacters());
+                    break;
+                case XMLStreamConstants.END_DOCUMENT:
+                    handleEndDocument();
+                    documentEnded = true;
+                    break;
+                case XMLStreamConstants.NOTATION_DECLARATION:
+                    handleNotationDeclaration((NotationDeclaration) event);
+                    break;
+                case XMLStreamConstants.ENTITY_DECLARATION:
+                    handleEntityDeclaration((EntityDeclaration) event);
+                    break;
+                case XMLStreamConstants.COMMENT:
+                    handleComment((Comment) event);
+                    break;
+                case XMLStreamConstants.DTD:
+                    handleDtd((DTD) event);
+                    break;
+                case XMLStreamConstants.ENTITY_REFERENCE:
+                    handleEntityReference((EntityReference) event);
+                    break;
+            }
+        }
+        if (documentStarted && !documentEnded) {
+            handleEndDocument();
+        }
 
-	}
+    }
 
-	private void handleStartDocument(final XMLEvent event) throws SAXException {
-		if (event.isStartDocument()) {
-			StartDocument startDocument = (StartDocument) event;
-			String xmlVersion = startDocument.getVersion();
-			if (StringUtils.hasLength(xmlVersion)) {
-				this.xmlVersion = xmlVersion;
-			}
-			if (startDocument.encodingSet()) {
-				this.encoding = startDocument.getCharacterEncodingScheme();
-			}
-		}
+    private void handleStartDocument(final XMLEvent event) throws SAXException {
+        if (event.isStartDocument()) {
+            StartDocument startDocument = (StartDocument) event;
+            String xmlVersion = startDocument.getVersion();
+            if (StringUtils.hasLength(xmlVersion)) {
+                this.xmlVersion = xmlVersion;
+            }
+            if (startDocument.encodingSet()) {
+                this.encoding = startDocument.getCharacterEncodingScheme();
+            }
+        }
 
-		if (getContentHandler() != null) {
-			final Location location = event.getLocation();
-			getContentHandler().setDocumentLocator(new Locator2() {
+        if (getContentHandler() != null) {
+            final Location location = event.getLocation();
+            getContentHandler().setDocumentLocator(new Locator2() {
 
-				public int getColumnNumber() {
-					return location != null ? location.getColumnNumber() : -1;
-				}
+                public int getColumnNumber() {
+                    return location != null ? location.getColumnNumber() : -1;
+                }
 
-				public int getLineNumber() {
-					return location != null ? location.getLineNumber() : -1;
-				}
+                public int getLineNumber() {
+                    return location != null ? location.getLineNumber() : -1;
+                }
 
-				public String getPublicId() {
-					return location != null ? location.getPublicId() : null;
-				}
+                public String getPublicId() {
+                    return location != null ? location.getPublicId() : null;
+                }
 
-				public String getSystemId() {
-					return location != null ? location.getSystemId() : null;
-				}
+                public String getSystemId() {
+                    return location != null ? location.getSystemId() : null;
+                }
 
-				public String getXMLVersion() {
-					return xmlVersion;
-				}
+                public String getXMLVersion() {
+                    return xmlVersion;
+                }
 
-				public String getEncoding() {
-					return encoding;
-				}
-			});
+                public String getEncoding() {
+                    return encoding;
+                }
+            });
 
-			getContentHandler().startDocument();
-		}
-	}
+            getContentHandler().startDocument();
+        }
+    }
 
-	private void handleStartElement(StartElement startElement) throws SAXException {
-		if (getContentHandler() != null) {
-			QName qName = startElement.getName();
-			if (hasNamespacesFeature()) {
-				for (Iterator i = startElement.getNamespaces(); i.hasNext();) {
-					Namespace namespace = (Namespace) i.next();
-					startPrefixMapping(namespace.getPrefix(), namespace.getNamespaceURI());
-				}
-				for (Iterator i = startElement.getAttributes(); i.hasNext();) {
-					Attribute attribute = (Attribute) i.next();
-					QName attributeName = attribute.getName();
-					startPrefixMapping(attributeName.getPrefix(), attributeName.getNamespaceURI());
-				}
+    private void handleStartElement(StartElement startElement) throws SAXException {
+        if (getContentHandler() != null) {
+            QName qName = startElement.getName();
+            if (hasNamespacesFeature()) {
+                for (Iterator i = startElement.getNamespaces(); i.hasNext();) {
+                    Namespace namespace = (Namespace) i.next();
+                    startPrefixMapping(namespace.getPrefix(), namespace.getNamespaceURI());
+                }
+                for (Iterator i = startElement.getAttributes(); i.hasNext();) {
+                    Attribute attribute = (Attribute) i.next();
+                    QName attributeName = attribute.getName();
+                    startPrefixMapping(attributeName.getPrefix(), attributeName.getNamespaceURI());
+                }
 
-				getContentHandler().startElement(qName.getNamespaceURI(), qName.getLocalPart(), toQualifiedName(qName),
-						getAttributes(startElement));
-			} else {
-				getContentHandler().startElement("", "", toQualifiedName(qName), getAttributes(startElement));
-			}
-		}
-	}
+                getContentHandler().startElement(qName.getNamespaceURI(), qName.getLocalPart(),
+                        toQualifiedName(qName), getAttributes(startElement));
+            } else {
+                getContentHandler().startElement("", "", toQualifiedName(qName),
+                        getAttributes(startElement));
+            }
+        }
+    }
 
-	private void handleCharacters(Characters characters) throws SAXException {
-		char[] data = characters.getData().toCharArray();
-		if (getContentHandler() != null && characters.isIgnorableWhiteSpace()) {
-			getContentHandler().ignorableWhitespace(data, 0, data.length);
-			return;
-		}
-		if (characters.isCData() && getLexicalHandler() != null) {
-			getLexicalHandler().startCDATA();
-		}
-		if (getContentHandler() != null) {
-			getContentHandler().characters(data, 0, data.length);
-		}
-		if (characters.isCData() && getLexicalHandler() != null) {
-			getLexicalHandler().endCDATA();
-		}
-	}
+    private void handleCharacters(Characters characters) throws SAXException {
+        char[] data = characters.getData().toCharArray();
+        if (getContentHandler() != null && characters.isIgnorableWhiteSpace()) {
+            getContentHandler().ignorableWhitespace(data, 0, data.length);
+            return;
+        }
+        if (characters.isCData() && getLexicalHandler() != null) {
+            getLexicalHandler().startCDATA();
+        }
+        if (getContentHandler() != null) {
+            getContentHandler().characters(data, 0, data.length);
+        }
+        if (characters.isCData() && getLexicalHandler() != null) {
+            getLexicalHandler().endCDATA();
+        }
+    }
 
-	private void handleEndElement(EndElement endElement) throws SAXException {
-		if (getContentHandler() != null) {
-			QName qName = endElement.getName();
-			if (hasNamespacesFeature()) {
-				getContentHandler().endElement(qName.getNamespaceURI(), qName.getLocalPart(), toQualifiedName(qName));
-				for (Iterator i = endElement.getNamespaces(); i.hasNext();) {
-					Namespace namespace = (Namespace) i.next();
-					endPrefixMapping(namespace.getPrefix());
-				}
-			} else {
-				getContentHandler().endElement("", "", toQualifiedName(qName));
-			}
+    private void handleEndElement(EndElement endElement) throws SAXException {
+        if (getContentHandler() != null) {
+            QName qName = endElement.getName();
+            if (hasNamespacesFeature()) {
+                getContentHandler().endElement(qName.getNamespaceURI(), qName.getLocalPart(),
+                        toQualifiedName(qName));
+                for (Iterator i = endElement.getNamespaces(); i.hasNext();) {
+                    Namespace namespace = (Namespace) i.next();
+                    endPrefixMapping(namespace.getPrefix());
+                }
+            } else {
+                getContentHandler().endElement("", "", toQualifiedName(qName));
+            }
 
-		}
-	}
+        }
+    }
 
-	private void handleEndDocument() throws SAXException {
-		if (getContentHandler() != null) {
-			getContentHandler().endDocument();
-		}
-	}
+    private void handleEndDocument() throws SAXException {
+        if (getContentHandler() != null) {
+            getContentHandler().endDocument();
+        }
+    }
 
-	private void handleNotationDeclaration(NotationDeclaration declaration) throws SAXException {
-		if (getDTDHandler() != null) {
-			getDTDHandler().notationDecl(declaration.getName(), declaration.getPublicId(), declaration.getSystemId());
-		}
-	}
+    private void handleNotationDeclaration(NotationDeclaration declaration) throws SAXException {
+        if (getDTDHandler() != null) {
+            getDTDHandler().notationDecl(declaration.getName(), declaration.getPublicId(),
+                    declaration.getSystemId());
+        }
+    }
 
-	private void handleEntityDeclaration(EntityDeclaration entityDeclaration) throws SAXException {
-		if (getDTDHandler() != null) {
-			getDTDHandler().unparsedEntityDecl(entityDeclaration.getName(), entityDeclaration.getPublicId(),
-					entityDeclaration.getSystemId(), entityDeclaration.getNotationName());
-		}
-	}
+    private void handleEntityDeclaration(EntityDeclaration entityDeclaration) throws SAXException {
+        if (getDTDHandler() != null) {
+            getDTDHandler().unparsedEntityDecl(entityDeclaration.getName(),
+                    entityDeclaration.getPublicId(), entityDeclaration.getSystemId(),
+                    entityDeclaration.getNotationName());
+        }
+    }
 
-	private void handleProcessingInstruction(ProcessingInstruction pi) throws SAXException {
-		if (getContentHandler() != null) {
-			getContentHandler().processingInstruction(pi.getTarget(), pi.getData());
-		}
-	}
+    private void handleProcessingInstruction(ProcessingInstruction pi) throws SAXException {
+        if (getContentHandler() != null) {
+            getContentHandler().processingInstruction(pi.getTarget(), pi.getData());
+        }
+    }
 
-	private void handleComment(Comment comment) throws SAXException {
-		if (getLexicalHandler() != null) {
-			char[] ch = comment.getText().toCharArray();
-			getLexicalHandler().comment(ch, 0, ch.length);
-		}
-	}
+    private void handleComment(Comment comment) throws SAXException {
+        if (getLexicalHandler() != null) {
+            char[] ch = comment.getText().toCharArray();
+            getLexicalHandler().comment(ch, 0, ch.length);
+        }
+    }
 
-	private void handleDtd(DTD dtd) throws SAXException {
-		if (getLexicalHandler() != null) {
-			javax.xml.stream.Location location = dtd.getLocation();
-			getLexicalHandler().startDTD(null, location.getPublicId(), location.getSystemId());
-		}
-		if (getLexicalHandler() != null) {
-			getLexicalHandler().endDTD();
-		}
+    private void handleDtd(DTD dtd) throws SAXException {
+        if (getLexicalHandler() != null) {
+            javax.xml.stream.Location location = dtd.getLocation();
+            getLexicalHandler().startDTD(null, location.getPublicId(), location.getSystemId());
+        }
+        if (getLexicalHandler() != null) {
+            getLexicalHandler().endDTD();
+        }
 
-	}
+    }
 
-	private void handleEntityReference(EntityReference reference) throws SAXException {
-		if (getLexicalHandler() != null) {
-			getLexicalHandler().startEntity(reference.getName());
-		}
-		if (getLexicalHandler() != null) {
-			getLexicalHandler().endEntity(reference.getName());
-		}
+    private void handleEntityReference(EntityReference reference) throws SAXException {
+        if (getLexicalHandler() != null) {
+            getLexicalHandler().startEntity(reference.getName());
+        }
+        if (getLexicalHandler() != null) {
+            getLexicalHandler().endEntity(reference.getName());
+        }
 
-	}
+    }
 
-	private Attributes getAttributes(StartElement event) {
-		AttributesImpl attributes = new AttributesImpl();
+    private Attributes getAttributes(StartElement event) {
+        AttributesImpl attributes = new AttributesImpl();
 
-		for (Iterator i = event.getAttributes(); i.hasNext();) {
-			Attribute attribute = (Attribute) i.next();
-			QName qName = attribute.getName();
-			String namespace = qName.getNamespaceURI();
-			if (namespace == null || !hasNamespacesFeature()) {
-				namespace = "";
-			}
-			String type = attribute.getDTDType();
-			if (type == null) {
-				type = "CDATA";
-			}
-			attributes
-					.addAttribute(namespace, qName.getLocalPart(), toQualifiedName(qName), type, attribute.getValue());
-		}
-		if (hasNamespacePrefixesFeature()) {
-			for (Iterator i = event.getNamespaces(); i.hasNext();) {
-				Namespace namespace = (Namespace) i.next();
-				String prefix = namespace.getPrefix();
-				String namespaceUri = namespace.getNamespaceURI();
-				String qName;
-				if (StringUtils.hasLength(prefix)) {
-					qName = "xmlns:" + prefix;
-				} else {
-					qName = "xmlns";
-				}
-				attributes.addAttribute("", "", qName, "CDATA", namespaceUri);
-			}
-		}
+        for (Iterator i = event.getAttributes(); i.hasNext();) {
+            Attribute attribute = (Attribute) i.next();
+            QName qName = attribute.getName();
+            String namespace = qName.getNamespaceURI();
+            if (namespace == null || !hasNamespacesFeature()) {
+                namespace = "";
+            }
+            String type = attribute.getDTDType();
+            if (type == null) {
+                type = "CDATA";
+            }
+            attributes.addAttribute(namespace, qName.getLocalPart(), toQualifiedName(qName), type,
+                    attribute.getValue());
+        }
+        if (hasNamespacePrefixesFeature()) {
+            for (Iterator i = event.getNamespaces(); i.hasNext();) {
+                Namespace namespace = (Namespace) i.next();
+                String prefix = namespace.getPrefix();
+                String namespaceUri = namespace.getNamespaceURI();
+                String qName;
+                if (StringUtils.hasLength(prefix)) {
+                    qName = "xmlns:" + prefix;
+                } else {
+                    qName = "xmlns";
+                }
+                attributes.addAttribute("", "", qName, "CDATA", namespaceUri);
+            }
+        }
 
-		return attributes;
-	}
+        return attributes;
+    }
 
 }

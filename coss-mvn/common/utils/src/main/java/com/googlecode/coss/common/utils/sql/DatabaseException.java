@@ -6,8 +6,8 @@ package com.googlecode.coss.common.utils.sql;
 @SuppressWarnings("serial")
 public class DatabaseException extends RuntimeException {
 
-	public DatabaseException(Throwable cause) {
-		super(cause);
-	}
+    public DatabaseException(Throwable cause) {
+        super(cause);
+    }
 
 }

@@ -20,25 +20,25 @@ import javax.xml.transform.ErrorListener;
 import javax.xml.transform.TransformerException;
 
 /**
- * Simple <code>javax.xml.transform.ErrorListener</code> implementation:
- * logs warnings using the given Commons Logging logger instance,
- * and rethrows errors to discontinue the XML transformation.
- *
+ * Simple <code>javax.xml.transform.ErrorListener</code> implementation: logs
+ * warnings using the given Commons Logging logger instance, and rethrows errors
+ * to discontinue the XML transformation.
+ * 
  * @author Juergen Hoeller
  * @since 1.2
  */
 public class SimpleTransformErrorListener implements ErrorListener {
 
-	public void warning(TransformerException ex) throws TransformerException {
-		ex.printStackTrace();
-	}
+    public void warning(TransformerException ex) throws TransformerException {
+        ex.printStackTrace();
+    }
 
-	public void error(TransformerException ex) throws TransformerException {
-		ex.printStackTrace();
-	}
+    public void error(TransformerException ex) throws TransformerException {
+        ex.printStackTrace();
+    }
 
-	public void fatalError(TransformerException ex) throws TransformerException {
-		throw ex;
-	}
+    public void fatalError(TransformerException ex) throws TransformerException {
+        throw ex;
+    }
 
 }

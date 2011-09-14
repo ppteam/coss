@@ -5,16 +5,16 @@ package com.googlecode.coss.common.utils.proxy;
  */
 public class DynamicProxy extends BaseDynamicProxy {
 
-	@Override
-	protected void doBefore() {
-		System.out.println("============ 进行校验 =============");
-	}
+    @Override
+    protected void doBefore() {
+        System.out.println("============ 进行校验 =============");
+    }
 
-	@Override
-	protected Object doAfter(Object res) {
-		System.out.println("============ 记录日志 =============");
-		String endRes = String.valueOf(res) + " do more.";
-		return endRes;
-	}
+    @Override
+    protected Object doAfter(Object res) {
+        System.out.println("============ 记录日志 =============");
+        String endRes = String.valueOf(res) + " do more.";
+        return endRes;
+    }
 
 }

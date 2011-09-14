@@ -11,41 +11,44 @@ import org.springframework.context.MessageSourceResolvable;
 import org.springframework.context.NoSuchMessageException;
 
 /**
- * 用于持有spring的messageSource,一个系统只能有一个MessageSourceHolder 
+ * 用于持有spring的messageSource,一个系统只能有一个MessageSourceHolder
  */
 public class MessageSourceHolder implements MessageSourceAware {
 
-	private static Log log = LogFactory.getLog(MessageSourceHolder.class);
-	private static MessageSource messageSource;
+    private static Log           log = LogFactory.getLog(MessageSourceHolder.class);
+    private static MessageSource messageSource;
 
-	@SuppressWarnings("all")
-	public void setMessageSource(MessageSource message) throws BeansException {
-		if (this.messageSource != null) {
-			throw new IllegalStateException("MessageSourceHolder already holded 'messageSource'.");
-		}
-		this.messageSource = message;
-		log.info("holded messageSource,displayName:" + messageSource);
-	}
+    @SuppressWarnings("all")
+    public void setMessageSource(MessageSource message) throws BeansException {
+        if (this.messageSource != null) {
+            throw new IllegalStateException("MessageSourceHolder already holded 'messageSource'.");
+        }
+        this.messageSource = message;
+        log.info("holded messageSource,displayName:" + messageSource);
+    }
 
-	public static MessageSource getMessageSource() {
-		if (messageSource == null)
-			throw new IllegalStateException("'messageSource' property is null,MessageSourceHolder not yet init.");
-		return messageSource;
-	}
+    public static MessageSource getMessageSource() {
+        if (messageSource == null)
+            throw new IllegalStateException(
+                    "'messageSource' property is null,MessageSourceHolder not yet init.");
+        return messageSource;
+    }
 
-	public String getMessage(MessageSourceResolvable resolvable, Locale locale) throws NoSuchMessageException {
-		return getMessageSource().getMessage(resolvable, locale);
-	}
+    public String getMessage(MessageSourceResolvable resolvable, Locale locale)
+            throws NoSuchMessageException {
+        return getMessageSource().getMessage(resolvable, locale);
+    }
 
-	public String getMessage(String code, Object[] args, Locale locale) throws NoSuchMessageException {
-		return getMessageSource().getMessage(code, args, locale);
-	}
+    public String getMessage(String code, Object[] args, Locale locale)
+            throws NoSuchMessageException {
+        return getMessageSource().getMessage(code, args, locale);
+    }
 
-	public String getMessage(String code, Object[] args, String defaultMessage, Locale locale) {
-		return getMessageSource().getMessage(code, args, defaultMessage, locale);
-	}
+    public String getMessage(String code, Object[] args, String defaultMessage, Locale locale) {
+        return getMessageSource().getMessage(code, args, defaultMessage, locale);
+    }
 
-	public static void cleanHolder() {
-		messageSource = null;
-	}
+    public static void cleanHolder() {
+        messageSource = null;
+    }
 }

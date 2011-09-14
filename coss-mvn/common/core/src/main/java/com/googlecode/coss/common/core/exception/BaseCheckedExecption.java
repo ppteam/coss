@@ -5,43 +5,43 @@ package com.googlecode.coss.common.core.exception;
  */
 public abstract class BaseCheckedExecption extends Exception implements SysExecption {
 
-	protected String errorCode;
-	protected String errorMessage;
+    protected String errorCode;
+    protected String errorMessage;
 
-	@Override
-	public Throwable fillInStackTrace() {
-		return this;
-	}
+    @Override
+    public Throwable fillInStackTrace() {
+        return this;
+    }
 
-	public String getMessage() {
-		return errorMessage;
-	}
+    public String getMessage() {
+        return errorMessage;
+    }
 
-	public void setErrorMessage(String errorMessage) {
-		this.errorMessage = errorMessage;
-	}
+    public void setErrorMessage(String errorMessage) {
+        this.errorMessage = errorMessage;
+    }
 
-	public String getErrorCode() {
-		return this.errorCode;
-	}
+    public String getErrorCode() {
+        return this.errorCode;
+    }
 
-	public void setErrorCode(String errorCode) {
-		this.errorCode = errorCode;
-	}
+    public void setErrorCode(String errorCode) {
+        this.errorCode = errorCode;
+    }
 
-	public BaseCheckedExecption() {
-		super();
-	}
+    public BaseCheckedExecption() {
+        super();
+    }
 
-	public BaseCheckedExecption(String message) {
-		super(message);
-	}
+    public BaseCheckedExecption(String message) {
+        super(message);
+    }
 
-	public BaseCheckedExecption(Throwable cause) {
-		super(cause);
-	}
+    public BaseCheckedExecption(Throwable cause) {
+        super(cause);
+    }
 
-	public BaseCheckedExecption(String message, Throwable cause) {
-		super(message, cause);
-	}
+    public BaseCheckedExecption(String message, Throwable cause) {
+        super(message, cause);
+    }
 }

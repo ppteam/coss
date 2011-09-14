@@ -18,66 +18,66 @@ package com.googlecode.coss.common.utils.lang.DateTime;
  */
 public class StopWatch {
 
-	// private long startTime = System.currentTimeMillis();
+    // private long startTime = System.currentTimeMillis();
 
-	private long from;
-	private long to;
+    private long from;
+    private long to;
 
-	public static StopWatch begin() {
-		StopWatch sw = new StopWatch();
-		sw.start();
-		return sw;
-	}
+    public static StopWatch begin() {
+        StopWatch sw = new StopWatch();
+        sw.start();
+        return sw;
+    }
 
-	public static StopWatch create() {
-		return new StopWatch();
-	}
+    public static StopWatch create() {
+        return new StopWatch();
+    }
 
-	public static StopWatch run(Runnable atom) {
-		StopWatch sw = begin();
-		atom.run();
-		sw.stop();
-		return sw;
-	}
+    public static StopWatch run(Runnable atom) {
+        StopWatch sw = begin();
+        atom.run();
+        sw.stop();
+        return sw;
+    }
 
-	public long start() {
-		from = System.currentTimeMillis();
-		return from;
-	}
+    public long start() {
+        from = System.currentTimeMillis();
+        return from;
+    }
 
-	public long stop() {
-		to = System.currentTimeMillis();
-		return to;
-	}
+    public long stop() {
+        to = System.currentTimeMillis();
+        return to;
+    }
 
-	public long getDuration() {
-		return to - from;
-	}
+    public long getDuration() {
+        return to - from;
+    }
 
-	public long getStartTime() {
-		return from;
-	}
+    public long getStartTime() {
+        return from;
+    }
 
-	public long getEndTime() {
-		return to;
-	}
+    public long getEndTime() {
+        return to;
+    }
 
-	@Override
-	public String toString() {
-		return String.format("Total: %dms : [%s]=>[%s]", this.getDuration(), new java.sql.Timestamp(from).toString(),
-				new java.sql.Timestamp(to).toString());
-	}
+    @Override
+    public String toString() {
+        return String.format("Total: %dms : [%s]=>[%s]", this.getDuration(),
+                new java.sql.Timestamp(from).toString(), new java.sql.Timestamp(to).toString());
+    }
 
-	/**
-	 * <p>
-	 * The Interval between start time to stop time
-	 * </p>
-	 * 
-	 * @return System.currentTimeMillis() - startTime
-	 */
-	public long getInterval() {
-		long lastStartTime = this.from;
-		this.from = System.currentTimeMillis();
-		return System.currentTimeMillis() - lastStartTime;
-	}
+    /**
+     * <p>
+     * The Interval between start time to stop time
+     * </p>
+     * 
+     * @return System.currentTimeMillis() - startTime
+     */
+    public long getInterval() {
+        long lastStartTime = this.from;
+        this.from = System.currentTimeMillis();
+        return System.currentTimeMillis() - lastStartTime;
+    }
 }

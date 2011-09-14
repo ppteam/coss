@@ -18,75 +18,77 @@ import org.springframework.validation.Validator;
  * static 方法调用:
  * SpringValidatorHolder.validate(object);
  * </pre>
+ * 
  * <pre>
  * spring配置:
  * &lt;bean class="cn.org.rapid_framework.beanvalidation.SpringValidatorHolder">
  * 	 &lt;preperty name="validator" ref="validator"/>
  * &lt;/bean>
- * </pre> 
- * 
- *
+ * </pre>
  */
 public class SpringValidatorHolder implements InitializingBean {
-	private static Validator validator;
+    private static Validator validator;
 
-	public void afterPropertiesSet() throws Exception {
-		if (validator == null)
-			throw new BeanCreationException("not found spring 'validator' for SpringValidatorHolder ");
-	}
+    public void afterPropertiesSet() throws Exception {
+        if (validator == null)
+            throw new BeanCreationException(
+                    "not found spring 'validator' for SpringValidatorHolder ");
+    }
 
-	@SuppressWarnings("all")
-	public void setValidator(Validator v) {
-		if (validator != null) {
-			throw new IllegalStateException("SpringValidatorHolder already holded 'validator'");
-		}
-		validator = v;
-	}
+    @SuppressWarnings("all")
+    public void setValidator(Validator v) {
+        if (validator != null) {
+            throw new IllegalStateException("SpringValidatorHolder already holded 'validator'");
+        }
+        validator = v;
+    }
 
-	private static Validator getRequiredValidator() {
-		if (validator == null)
-			throw new IllegalStateException("'validator' property is null,SpringValidatorHolder not yet init.");
-		return validator;
-	}
+    private static Validator getRequiredValidator() {
+        if (validator == null)
+            throw new IllegalStateException(
+                    "'validator' property is null,SpringValidatorHolder not yet init.");
+        return validator;
+    }
 
-	public static Validator getValidator() {
-		return getRequiredValidator();
-	}
+    public static Validator getValidator() {
+        return getRequiredValidator();
+    }
 
-	public static boolean supports(Class<?> type) {
-		return getRequiredValidator().supports(type);
-	}
+    public static boolean supports(Class<?> type) {
+        return getRequiredValidator().supports(type);
+    }
 
-	public static void validate(Object object, Errors errors) {
-		getRequiredValidator().validate(object, errors);
-	}
+    public static void validate(Object object, Errors errors) {
+        getRequiredValidator().validate(object, errors);
+    }
 
-	public static void validate(Object object) throws BindException {
-		BeanPropertyBindingResult errors = new BeanPropertyBindingResult(object, object.getClass().getSimpleName());
-		getRequiredValidator().validate(object, errors);
-		if (errors.hasErrors()) {
-			throw new BindException(errors);
-		}
-	}
+    public static void validate(Object object) throws BindException {
+        BeanPropertyBindingResult errors = new BeanPropertyBindingResult(object, object.getClass()
+                .getSimpleName());
+        getRequiredValidator().validate(object, errors);
+        if (errors.hasErrors()) {
+            throw new BindException(errors);
+        }
+    }
 
-	@SuppressWarnings("unchecked")
-	public static String getErrorMessage(BindException e) {
-		List<FieldError> errors = e.getFieldErrors();
-		StringBuffer sb = null;
-		if (errors != null && !errors.isEmpty())
-			sb = new StringBuffer().append("\nValidate bean error:\n");
-		else
-			return null;
-		for (Iterator<FieldError> it = errors.iterator(); it.hasNext();) {
-			FieldError err = (FieldError) it.next();
-			sb.append(err.getObjectName()).append(" ").append(err.getField()).append(": ").append("Rejected Value [")
-					.append(err.getRejectedValue() + "]").append(", ").append(err.getCode()).append(" ")
-					.append(err.getDefaultMessage()).append("\n");
-		}
-		return sb.toString();
-	}
+    @SuppressWarnings("unchecked")
+    public static String getErrorMessage(BindException e) {
+        List<FieldError> errors = e.getFieldErrors();
+        StringBuffer sb = null;
+        if (errors != null && !errors.isEmpty())
+            sb = new StringBuffer().append("\nValidate bean error:\n");
+        else
+            return null;
+        for (Iterator<FieldError> it = errors.iterator(); it.hasNext();) {
+            FieldError err = (FieldError) it.next();
+            sb.append(err.getObjectName()).append(" ").append(err.getField()).append(": ")
+                    .append("Rejected Value [").append(err.getRejectedValue() + "]").append(", ")
+                    .append(err.getCode()).append(" ").append(err.getDefaultMessage()).append("\n");
+        }
+        return sb.toString();
+    }
 
-	public static void cleanHolder() {
-		validator = null;
-	}
+    public static void cleanHolder() {
+        validator = null;
+    }
 }

@@ -21,25 +21,25 @@ import org.xml.sax.SAXException;
 import org.xml.sax.SAXParseException;
 
 /**
- * Simple <code>org.xml.sax.ErrorHandler</code> implementation:
- * logs warnings using the given Commons Logging logger instance,
- * and rethrows errors to discontinue the XML transformation.
- *
+ * Simple <code>org.xml.sax.ErrorHandler</code> implementation: logs warnings
+ * using the given Commons Logging logger instance, and rethrows errors to
+ * discontinue the XML transformation.
+ * 
  * @author Juergen Hoeller
  * @since 1.2
  */
 public class SimpleSaxErrorHandler implements ErrorHandler {
 
-	public void warning(SAXParseException ex) throws SAXException {
-		ex.printStackTrace();
-	}
+    public void warning(SAXParseException ex) throws SAXException {
+        ex.printStackTrace();
+    }
 
-	public void error(SAXParseException ex) throws SAXException {
-		throw ex;
-	}
+    public void error(SAXParseException ex) throws SAXException {
+        throw ex;
+    }
 
-	public void fatalError(SAXParseException ex) throws SAXException {
-		throw ex;
-	}
+    public void fatalError(SAXParseException ex) throws SAXException {
+        throw ex;
+    }
 
 }

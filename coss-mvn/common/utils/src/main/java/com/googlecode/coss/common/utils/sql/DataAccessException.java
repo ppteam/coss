@@ -6,7 +6,7 @@ package com.googlecode.coss.common.utils.sql;
 @SuppressWarnings("serial")
 public class DataAccessException extends RuntimeException {
 
-	public DataAccessException(Throwable cause) {
-		super(cause);
-	}
+    public DataAccessException(Throwable cause) {
+        super(cause);
+    }
 }

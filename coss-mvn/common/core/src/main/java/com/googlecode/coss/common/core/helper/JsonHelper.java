@@ -65,10 +65,9 @@ public class JsonHelper {
     }
 
     /*
-    public static void main(String[] args) {
-        String json = "[{\"contactName\":\"ccc\",\"gender\":\"eer\",\"position\":\"1001\",\"mobile\":\"123124\",\"workPhone\":\"532423\",\"email\":\"asdas@adf.com\",\"homePhone\":\"3231231\",\"qq\":\"323123\",\"msn\":\"asdfadsg\",\"other\":\"hhhh\"},{\"contactName\":\"ccc\",\"gender\":\"eer\",\"position\":\"1001\",\"mobile\":\"123124\",\"workPhone\":\"532423\",\"email\":\"asdas@adf.com\",\"homePhone\":\"3231231\",\"qq\":\"323123\",\"msn\":\"asdfadsg\",\"other\":\"hhhh\"}]";
-        List<Map> as = parseList(json, Map.class);
-        System.out.println(as.get(0).get("contactName"));
-    }
-    */
+     * public static void main(String[] args) { String json =
+     * "[{\"contactName\":\"ccc\",\"gender\":\"eer\",\"position\":\"1001\",\"mobile\":\"123124\",\"workPhone\":\"532423\",\"email\":\"asdas@adf.com\",\"homePhone\":\"3231231\",\"qq\":\"323123\",\"msn\":\"asdfadsg\",\"other\":\"hhhh\"},{\"contactName\":\"ccc\",\"gender\":\"eer\",\"position\":\"1001\",\"mobile\":\"123124\",\"workPhone\":\"532423\",\"email\":\"asdas@adf.com\",\"homePhone\":\"3231231\",\"qq\":\"323123\",\"msn\":\"asdfadsg\",\"other\":\"hhhh\"}]"
+     * ; List<Map> as = parseList(json, Map.class);
+     * System.out.println(as.get(0).get("contactName")); }
+     */
 }

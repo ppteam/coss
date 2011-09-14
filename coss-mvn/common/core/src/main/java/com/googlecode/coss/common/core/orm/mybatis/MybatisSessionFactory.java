@@ -20,68 +20,71 @@ import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
  * session工厂类
  */
 public class MybatisSessionFactory implements FactoryBean, InitializingBean {
-	private String configLocation;
+    private String            configLocation;
 
-	private DataSource dataSource;
+    private DataSource        dataSource;
 
-	private SqlSessionFactory sqlSessionFactory;
+    private SqlSessionFactory sqlSessionFactory;
 
-	private boolean useTransactionAwareDataSource = true;
+    private boolean           useTransactionAwareDataSource = true;
 
-	private String environmentId = "development";
+    private String            environmentId                 = "development";
 
-	public void setEnvironmentId(String environmentId) {
-		this.environmentId = environmentId;
-	}
+    public void setEnvironmentId(String environmentId) {
+        this.environmentId = environmentId;
+    }
 
-	public void setUseTransactionAwareDataSource(boolean useTransactionAwareDataSource) {
-		this.useTransactionAwareDataSource = useTransactionAwareDataSource;
-	}
+    public void setUseTransactionAwareDataSource(boolean useTransactionAwareDataSource) {
+        this.useTransactionAwareDataSource = useTransactionAwareDataSource;
+    }
 
-	public Object getObject() throws Exception {
-		return this.sqlSessionFactory;
-	}
+    public Object getObject() throws Exception {
+        return this.sqlSessionFactory;
+    }
 
-	public Class getObjectType() {
-		return (this.sqlSessionFactory != null ? this.sqlSessionFactory.getClass() : SqlSessionFactory.class);
-	}
+    public Class getObjectType() {
+        return (this.sqlSessionFactory != null ? this.sqlSessionFactory.getClass()
+                : SqlSessionFactory.class);
+    }
 
-	public boolean isSingleton() {
-		return true;
-	}
+    public boolean isSingleton() {
+        return true;
+    }
 
-	public void afterPropertiesSet() throws Exception {
-		this.sqlSessionFactory = this.buildSqlSessionFactory(configLocation);
-	}
+    public void afterPropertiesSet() throws Exception {
+        this.sqlSessionFactory = this.buildSqlSessionFactory(configLocation);
+    }
 
-	protected SqlSessionFactory buildSqlSessionFactory(String configLocation) throws IOException {
-		if (configLocation == null) {
-			throw new IllegalArgumentException("configLocation entry is required");
-		}
-		DataSource dataSourceToUse = this.dataSource;
-		if (this.useTransactionAwareDataSource && !(this.dataSource instanceof TransactionAwareDataSourceProxy)) {
-			dataSourceToUse = new TransactionAwareDataSourceProxy(this.dataSource);
-		}
+    protected SqlSessionFactory buildSqlSessionFactory(String configLocation) throws IOException {
+        if (configLocation == null) {
+            throw new IllegalArgumentException("configLocation entry is required");
+        }
+        DataSource dataSourceToUse = this.dataSource;
+        if (this.useTransactionAwareDataSource
+                && !(this.dataSource instanceof TransactionAwareDataSourceProxy)) {
+            dataSourceToUse = new TransactionAwareDataSourceProxy(this.dataSource);
+        }
 
-		Environment environment = new Environment(environmentId, new ManagedTransactionFactory(), dataSourceToUse);
+        Environment environment = new Environment(environmentId, new ManagedTransactionFactory(),
+                dataSourceToUse);
 
-		Reader reader = Resources.getResourceAsReader(configLocation);
-		XMLConfigBuilder parser = new XMLConfigBuilder(reader, null, null);
-		Configuration config = parser.parse();
-		config.setEnvironment(environment);
+        Reader reader = Resources.getResourceAsReader(configLocation);
+        XMLConfigBuilder parser = new XMLConfigBuilder(reader, null, null);
+        Configuration config = parser.parse();
+        config.setEnvironment(environment);
 
-		return new DefaultSqlSessionFactory(config);
-	}
+        return new DefaultSqlSessionFactory(config);
+    }
 
-	public DataSource getDataSource() {
-		return dataSource;
-	}
+    public DataSource getDataSource() {
+        return dataSource;
+    }
 
-	public void setDataSource(DataSource dataSource) {
-		this.dataSource = dataSource;
-	}
+    public void setDataSource(DataSource dataSource) {
+        this.dataSource = dataSource;
+    }
 
-	public void setConfigLocation(String configLocation) {
-		this.configLocation = configLocation;
-	}
+    public void setConfigLocation(String configLocation) {
+        this.configLocation = configLocation;
+    }
 }
