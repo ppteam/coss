@@ -1,5 +1,0 @@
-import ${import_common}.orm.mybatis.BaseSqlMapDao;
-import ${import_common}.orm.mybatis.BaseSqlMap;
-import org.springframework.stereotype.Repository;
-import ${import_common}.orm.mybatis.BaseDataObject;
-import ${import_common}.service.BaseService;
