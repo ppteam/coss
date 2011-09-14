@@ -1,0 +1,474 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="CheckingRule">
+	<typeAlias alias="CheckingRule" type="com.neusoft.model.duty.dao.pojo.CheckingRule" />
+	<typeAlias alias="HolidayRule" type="com.neusoft.model.duty.dao.pojo.HolidayRule" />
+	<typeAlias alias="CheckDetail" type="com.neusoft.model.duty.dao.pojo.CheckDetail" />
+	<typeAlias alias="JobDetail" type="com.neusoft.model.duty.dao.pojo.JobDetail" />
+	<typeAlias alias="HappyDay" type="com.neusoft.model.duty.dao.pojo.HappyDay"/>
+	<insert id="insert_job" parameterClass="JobDetail">
+		INSERT INTO 
+			JOB_DETAIL (DETAIL_ID,JOB_ID,LAST_DATE,SPLIT_DAY,CHAIN_NAME)
+		VALUES
+			(#detailId#,#jobId#,CURRENT_DATE(),#splitDay#,#chainName#)
+	</insert>
+	<update id="update_job" parameterClass="string">
+		UPDATE 
+			JOB_DETAIL 
+		SET
+			LAST_DATE = CURRENT_DATE()
+		WHERE
+			DETAIL_ID = #value#
+	</update>
+	<select id="query_exits_detail" parameterClass="string" resultClass="string">
+		SELECT
+			DETAIL_ID AS detailId
+		FROM
+			JOB_DETAIL
+		WHERE
+			JOB_ID = #value#
+	</select>
+	<insert id="insert_CheckingRule" parameterClass="CheckingRule">
+		INSERT INTO CHECKING_RULE
+			(RULE_ID,DEPT_ID,USER_ID,START_DATE,END_DATE,BEGINWK_TIME,
+			 ENDWK_TIME,ENTRYING_DATE,RULE_NAME,BEGIN_WEEK,END_WEEK,ENABLED)
+		VALUES
+			(#ruleId#,#deptId#,#userId#,#startDate#,#endDate#,#beiginWkTime#,
+				#endWkTime#,CURRENT_DATE(),#ruleName:VARCHAR#,#beginWeek#,#endWeek#,1)
+	</insert>
+	<insert id="insert_HolidayRule" parameterClass="HolidayRule">
+		INSERT INTO HOLIDAY_RULE
+			(HOLIDAY_ID,USER_ID,START_DATE,END_DATE,ENTRY_DATE,HOLIDAY_NAME,
+			ADDITION_INFO,ENABLED,DAY_TYPE)
+		VALUES
+			(#holidayId#,#userId#,#startDate#,#endDate#,CURRENT_DATE(),#holidayName#,
+			#additionInfo:VARCHAR#,#enabled#,#dayType#)
+	</insert>
+	<insert id="insert_CheckDetail" parameterClass="CheckDetail">
+		INSERT INTO CHECK_DETAIL
+			(
+				DETAIL_ID,USER_ID,DEPT_ID,DAY_STATS,CHECK_DATE,
+				BEGIN_STATS,END_STATS,
+				BEGIN_CHECK,END_CHECK,RULE_ID
+				
+			)
+		VALUES
+			(
+				#detailId#,#userId#,#deptId#,#dayStats#,CURRENT_DATE(),
+				#beginStats#,#endStats#,
+				#beginCheck:VARCHAR#,#endCheck:VARCHAR#,#ruleId#
+			)
+	</insert>
+	<update id="update_CheckDetail" parameterClass="CheckDetail">
+		UPDATE
+			CHECK_DETAIL
+		SET
+			DAY_STATS = #dayStats#,
+			BEGIN_STATS = #beginStats#,
+			END_STATS = #endStats#,
+			RULE_ID = #ruleId#,
+			BEGIN_CHECK = #beginCheck:VARCHAR#,
+			END_CHECK = #endCheck:VARCHAR#,
+			COMMENTS= #comments:VARCHARl#
+		WHERE
+			DETAIL_ID = #detailId#
+	</update>
+	<insert id="insert_batch_CheckDetail" parameterClass="CheckDetail">
+		INSERT INTO CHECK_DETAIL
+			(DETAIL_ID,USER_ID,DAY_STATS,CHECK_DATE,DEPT_ID,BEGIN_STATS,END_STATS)
+		values
+			(#detailId#,#userId#,0,CURRENT_DATE(),#deptId#,0,0)
+	</insert>
+	<update id="update_HolidayRule" parameterClass="HolidayRule">
+		UPDATE 
+			HOLIDAY_RULE
+		SET
+			USER_ID = #userId#,START_DATE = #startDate#,
+			END_DATE = #endDate#,ENTRY_DATE = CURRENT_DATE(),
+			HOLIDAY_NAME = #holidayName#,
+			ENABLED = #enabled#,
+			DAY_TYPE = #dayType#,
+			ADDITION_INFO = #additionInfo:VARCHAR#
+		WHERE
+			HOLIDAY_ID = #holidayId#
+	</update>
+	<update id="update_check_comments" parameterClass="map">
+		UPDATE
+			CHECK_DETAIL
+		SET
+			COMMENTS= #comments:VARCHARl#
+		WHERE
+			DETAIL_ID = #detailId#
+	</update>
+	<update id="cancel_CheckingRule" parameterClass="CheckingRule">
+		UPDATE 
+			CHECKING_RULE
+		SET
+			USER_ID = #userId#,
+			ENTRYING_DATE = CURRENT_DATE(),
+			ENABLED = 0
+		WHERE
+			RULE_ID = #ruleId#
+	</update>
+	<select id="query_dept_path_userId" parameterClass="string" resultClass="string">
+		SELECT
+			d.NODE_XPATH
+		FROM
+			USER_BASIC u LEFT JOIN DEPARTMENT_INFO d ON d.DEPT_ID = u.DEPT_ID
+		WHERE
+			u.USER_ID = #value#
+	</select>
+	<select id="query_checkrule_byId" parameterClass="string" resultClass="CheckingRule">
+		SELECT 
+			c.RULE_ID as ruleId,
+			c.START_DATE as startDate,
+			c.END_DATE as endDate,
+			c.ENTRYING_DATE as entryIngDate,
+			c.BEGINWK_TIME as beiginWkTime,
+			c.ENDWK_TIME as endWkTime,
+			c.RULE_NAME as ruleName,
+			c.BEGIN_WEEK as beginWeek,
+			c.END_WEEK as endWeek,
+			c.ENABLED as enabled
+		FROM
+			CHECKING_RULE c 
+		WHERE
+			c.RULE_ID = #value#
+	</select>
+	<select id="query_checkRec_by_loginUser" parameterClass="map" resultClass="CheckDetail">
+		SELECT 
+			c.DETAIL_ID as detailId,
+			c.USER_ID as userId,
+			c.DEPT_ID as deptId,
+			c.DAY_STATS as dayStats,
+			c.RULE_ID as ruleId,
+			c.BEGIN_CHECK as beginCheck,
+			c.END_CHECK as endCheck,
+			c.BEGIN_STATS as beginStats,
+			c.END_STATS as endStats
+		FROM
+			CHECK_DETAIL c
+		WHERE
+			c.USER_ID = #KEY_USERID# AND c.CHECK_DATE = CURRENT_DATE()
+	</select>
+	<select id="selectAll_for_options" resultClass="ComboxModel">
+		SELECT
+				t.RULE_ID as regValue,
+				t.RULE_NAME as displayValue,
+				0 as leafNode,
+				'rule_data' as storName
+		FROM
+			CHECKING_RULE t
+		WHERE
+			t.ENABLED = 1
+		ORDER BY 
+			t.ENTRYING_DATE
+	</select>
+			
+	<select id="query_holidayrule_by_today" resultClass="HolidayRule">
+		SELECT
+			h.HOLIDAY_ID as holidayId,h.DAY_TYPE as dayType,
+			h.HOLIDAY_NAME as holidayName
+		FROM
+			HOLIDAY_RULE h
+		WHERE
+			CURRENT_DATE() BETWEEN h.START_DATE AND h.END_DATE AND
+			h.ENABLED = 1
+	</select>
+	
+	<select id="query_checkrule_by_loginUser" parameterClass="map" resultClass="CheckingRule">
+		SELECT 
+			c.RULE_ID as ruleId,c.BEGINWK_TIME as beiginWkTime,c.ENDWK_TIME as endWkTime,
+			c.RULE_NAME as ruleName
+		FROM
+			CHECKING_RULE c 
+			LEFT JOIN DEPARTMENT_INFO d ON d.DEPT_ID = c.DEPT_ID
+		WHERE
+			c.ENABLED = 1 AND
+			(CURRENT_DATE() BETWEEN c.START_DATE AND c.END_DATE) 
+			<dynamic>
+				<iterate property="deptPath" open="AND c.DEPT_ID IN ( " close=" )" conjunction=",">
+					#deptPath[]#
+				</iterate>
+			</dynamic>
+		ORDER BY d.NODE_DEEP DESC,c.ENTRYING_DATE DESC
+		LIMIT 1
+	</select>
+	<!-- ========= SQL:query_ckstats_json =============== -->
+	<select id="query_ckstats_json" parameterClass="map" resultClass="java.util.HashMap">
+		SELECT 
+			d.DEPT_NAME AS deptName,cd.USER_ID AS userId,u.USER_NAME AS userName,
+			SUM(IF(cd.BEGIN_STATS = 1,1,0)) AS bgGod,
+			SUM(IF(cd.BEGIN_STATS = 0,1,0)) AS bgExp,
+			SUM(IF(cd.BEGIN_STATS = 2,1,0)) AS bgErr,
+			SUM(IF(cd.END_STATS = 1,1,0)) AS edGod,
+			SUM(IF(cd.END_STATS = 0,1,0)) AS edExp,
+			SUM(IF(cd.END_STATS = 2,1,0)) AS edErr
+		FROM 
+			CHECK_DETAIL cd
+		LEFT JOIN DEPARTMENT_INFO d ON d.DEPT_ID = cd.DEPT_ID
+		LEFT JOIN USER_BASIC u ON u.USER_ID = cd.USER_ID
+		WHERE
+			<dynamic>
+				( cd.CHECK_DATE BETWEEN #startDate# AND #endDate# )
+				<iterate property="deptIdSet" open=" AND cd.DEPT_ID IN ( " close=" )" conjunction=",">
+					#deptIdSet[]#
+				</iterate>
+			</dynamic>
+		GROUP BY cd.DEPT_ID,cd.USER_ID
+	</select>
+	<!-- ========= SQL:query_ckdetails_json =============== -->
+	<select id="query_ckdetails_json_count" parameterClass="map" resultClass="int">
+		SELECT 
+			COUNT(ck.DETAIL_ID)
+		FROM
+			CHECK_DETAIL AS ck
+				LEFT JOIN USER_BASIC u ON u.USER_ID = ck.USER_ID
+		WHERE
+			<dynamic>
+				( ck.CHECK_DATE BETWEEN #startDate# AND #endDate# )
+				<iterate property="deptIdSet" open="AND ck.DEPT_ID IN ( " close=" )" conjunction=",">
+					#deptIdSet[]#
+				</iterate>
+				<isNotEmpty property="userName" prepend=" AND ">
+					u.USER_NAME LIKE '%$userName$%'
+				</isNotEmpty>
+			</dynamic>
+	</select>
+	<select id="query_ckdetails_json" parameterClass="map" resultClass="CheckDetail">
+		SELECT
+			ck.DETAIL_ID as detailId,d.DEPT_NAME as deptName,
+			ck.DAY_STATS as dayStats,ck.CHECK_DATE as checkDate,
+			ck.BEGIN_CHECK as beginCheck, ck.END_CHECK as endCheck,
+			ck.BEGIN_STATS as beginStats,ck.END_STATS as endStats,
+			u.USER_NAME as userName,ck.RULE_ID as ruleId,
+			ck.COMMENTS AS comments
+		FROM
+			CHECK_DETAIL AS ck 
+				LEFT JOIN DEPARTMENT_INFO d ON d.DEPT_ID = ck.DEPT_ID
+				LEFT JOIN USER_BASIC u ON u.USER_ID = ck.USER_ID
+		WHERE
+			<dynamic>
+				( ck.CHECK_DATE BETWEEN #startDate# AND #endDate# )
+				<iterate property="deptIdSet" open=" AND ck.DEPT_ID IN ( " close=" )" conjunction=",">
+					#deptIdSet[]#
+				</iterate>
+				<isNotEmpty property="userName" prepend=" AND ">
+					u.USER_NAME LIKE '%$userName$%'
+				</isNotEmpty>
+			</dynamic>
+		ORDER BY ck.CHECK_DATE DESC
+		LIMIT
+			#start#,#limit#
+	</select>
+	<!-- ========= SQL:query_ckdetails_json =============== -->
+	<select id="query_pckdetails_json_count" parameterClass="map" resultClass="int">
+		SELECT 
+			COUNT(ck.DETAIL_ID)
+		FROM
+			CHECK_DETAIL AS ck
+				LEFT JOIN USER_BASIC u ON u.USER_ID = ck.USER_ID
+		WHERE
+			ck.USER_ID = #KEY_USERID#
+			<dynamic>
+				<isNotNull property="startDate" prepend=" AND ">
+					ck.CHECK_DATE &gt;= #startDate#
+				</isNotNull>
+				<isNotNull property="endDate" prepend=" AND ">
+					ck.CHECK_DATE &lt;= #endDate#
+				</isNotNull>
+			</dynamic>
+	</select>
+	<select id="query_pckdetails_json" parameterClass="map" resultClass="CheckDetail">
+		SELECT
+			ck.DETAIL_ID AS detailId,d.DEPT_NAME AS deptName,
+			ck.DAY_STATS AS dayStats,ck.CHECK_DATE AS checkDate,
+			ck.BEGIN_CHECK AS beginCheck, ck.END_CHECK AS endCheck,
+			ck.BEGIN_STATS AS beginStats,ck.END_STATS AS endStats,
+			ck.COMMENTS AS comments,
+			u.USER_NAME as userName
+		FROM
+			CHECK_DETAIL AS ck 
+				LEFT JOIN DEPARTMENT_INFO d ON d.DEPT_ID = ck.DEPT_ID
+				LEFT JOIN USER_BASIC u ON u.USER_ID = ck.USER_ID
+		WHERE
+			ck.USER_ID = #KEY_USERID#
+			<dynamic>
+				<isNotNull property="startDate" prepend=" AND ">
+					ck.CHECK_DATE &gt;= #startDate#
+				</isNotNull>
+				<isNotNull property="endDate" prepend=" AND ">
+					ck.CHECK_DATE &lt;= #endDate#
+				</isNotNull>
+			</dynamic>
+		ORDER BY ck.CHECK_DATE DESC
+		LIMIT
+			#start#,#limit#
+	</select>
+	<!-- ========= SQL:query_smpdetails_json =============== -->
+	<select id="query_smpdetails_json" parameterClass="map" resultClass="CheckDetail">
+		SELECT
+			ck.DETAIL_ID as detailId,d.DEPT_NAME as deptName,
+			ck.DAY_STATS as dayStats,ck.CHECK_DATE as checkDate,
+			ck.BEGIN_CHECK as beginCheck, ck.END_CHECK as endCheck,
+			ck.BEGIN_STATS as beginStats,ck.END_STATS as endStats,
+			u.USER_NAME as userName
+		FROM
+			CHECK_DETAIL AS ck 
+				LEFT JOIN DEPARTMENT_INFO d ON d.DEPT_ID = ck.DEPT_ID
+				LEFT JOIN USER_BASIC u ON u.USER_ID = ck.USER_ID
+		WHERE
+			ck.USER_ID = #userId# AND
+			ck.CHECK_DATE BETWEEN #startDate# AND #endDate#
+		ORDER BY ck.CHECK_DATE DESC
+	</select>
+	<!-- ========= SQL:query_ckdetails_json =============== -->
+	<select id="query_checkrule_json_count" parameterClass="map" resultClass="int">
+		SELECT 
+			COUNT(c.RULE_ID)
+		FROM
+			CHECKING_RULE c
+	</select>
+	<select id="query_checkrule_json" parameterClass="map" resultClass="CheckingRule">
+		SELECT 
+			c.RULE_ID as ruleId,c.DEPT_ID as deptId,
+			u.USER_NAME as userId,
+			c.START_DATE as startDate,
+			c.END_DATE as endDate,
+			c.ENTRYING_DATE as entryIngDate,
+			c.BEGINWK_TIME as beiginWkTime,
+			c.ENDWK_TIME as endWkTime,
+			c.RULE_NAME as ruleName,
+			d.DEPT_NAME as deptName,
+			c.BEGIN_WEEK as beginWeek,
+			c.END_WEEK as endWeek,
+			c.ENABLED as enabled
+		FROM
+			CHECKING_RULE c LEFT JOIN DEPARTMENT_INFO d ON d.DEPT_ID = c.DEPT_ID
+							LEFT JOIN USER_BASIC u ON u.USER_ID = c.USER_ID
+		ORDER BY d.NODE_DEEP DESC,c.ENTRYING_DATE DESC
+		LIMIT
+			#start#,#limit#
+	</select>
+	<select id="query_holiday_json_count" parameterClass="map" resultClass="int">
+		SELECT 
+			COUNT(h.HOLIDAY_ID)
+		FROM
+			HOLIDAY_RULE h
+		WHERE
+			year(h.START_DATE) = #year# OR year(h.END_DATE) = #year#
+		ORDER BY h.END_DATE DESC
+	</select>
+	<select id="query_holiday_json" parameterClass="map" resultClass="HolidayRule">
+		SELECT 
+			h.HOLIDAY_ID as holidayId,u.USER_NAME as userId,
+			h.HOLIDAY_NAME as holidayName,h.START_DATE as startDate,
+			h.END_DATE as endDate,h.ENTRY_DATE as entryDate,
+			h.ADDITION_INFO as additionInfo,h.ENABLED as enabled,
+			h.DAY_TYPE as dayType
+		FROM
+			HOLIDAY_RULE h LEFT JOIN USER_BASIC u ON u.USER_ID = h.USER_ID
+		WHERE
+			year(h.START_DATE) = #year# OR year(h.END_DATE) = #year#
+		ORDER BY h.START_DATE
+		LIMIT
+			#start#,#limit#
+	</select>
+	<select id="check_holiday_exits" parameterClass="HolidayRule" resultClass="HolidayRule">
+		SELECT 
+			h.HOLIDAY_ID as holidayId,h.HOLIDAY_NAME as holidayName
+		FROM
+			HOLIDAY_RULE h 
+		WHERE
+			 h.ENABLED = 1 AND 
+			 h.DAY_TYPE = #dayType# AND
+			(
+				h.START_DATE BETWEEN #startDate# AND #endDate# OR
+				h.END_DATE BETWEEN #startDate# AND #endDate#
+			)
+	</select>
+	<select id="query_happyDays_list" parameterClass="map" resultClass="HappyDay">
+		SELECT 
+			u.USER_ID AS userId,u.USER_NAME AS userName,d.DEPT_NAME AS deptName,
+			( 
+				SELECT 
+					SUM(e.WORK_HOURS) FROM EDAILY_REPORT e 
+			 	WHERE 
+			 		e.USER_ID = u.USER_ID AND e.WORK_TYPE ='dba8abe0a65945a49ebfc587c947d920' AND  
+			 		(e.REPORT_DATE BETWEEN  DATE_ADD(DATE_ADD(LAST_DAY(CURRENT_DATE),interval -4 month),interval 1 day) AND 
+			 								DATE_ADD(LAST_DAY(CURRENT_DATE),interval -1 month))
+			 ) AS overTime,
+			(
+				SELECT 
+					SUM(e.WORK_HOURS) FROM EDAILY_REPORT e 
+				WHERE 
+					e.USER_ID = u.USER_ID AND e.BEG_TYPE ='45670000000000000000000000000011' AND 
+  					MONTH(e.REPORT_DATE) = MONTH(CURRENT_DATE)
+  			) AS leaveTime
+		FROM 
+			USER_BASIC u, DEPARTMENT_INFO d
+		WHERE 
+			u.DEPT_ID=d.DEPT_ID AND u.TEAM_STATS = 1
+			<dynamic>
+			<iterate property="deptIds" open=" AND u.DEPT_ID IN ( " close=" )" conjunction=",">
+					#deptIds[]#
+			</iterate>
+			</dynamic>
+	</select>
+	<select id="check_dutyrule_exits" parameterClass="CheckingRule" resultClass="CheckingRule">
+		SELECT 
+			c.RULE_ID as ruleId,c.RULE_NAME as ruleName
+		FROM
+			CHECKING_RULE c
+		WHERE
+			c.DEPT_ID = #deptId# AND
+			c.ENABLED = 1 AND 
+			(
+				#startDate# BETWEEN c.START_DATE AND c.END_DATE OR
+				#endDate# BETWEEN c.START_DATE AND c.END_DATE
+			)
+	</select>
+	<select id="query_years_for_options" resultClass="ComboxModel">
+		SELECT
+				DISTINCT(DATE_FORMAT(h.START_DATE,'%Y')) as regValue,
+				'nothing' as displayValue,
+				'years_data' as storName
+		FROM
+			HOLIDAY_RULE h
+		ORDER BY
+			h.START_DATE
+	</select>
+	<select id="query_batch_check" resultClass="CheckDetail">
+		SELECT 
+			ub.USER_ID as userId,ub.DEPT_ID as deptId,
+			0 as beginStats,0 as endStats,0 as dayStats
+		FROM USER_BASIC ub 
+		WHERE 
+			ub.ENABLED = 1 AND
+ 			ub.USER_ID IN 
+ 			(
+				SELECT 
+					DISTINCT(mr.USER_ID) 
+				FROM 
+					USER_MAP_ROLE mr 
+				WHERE 
+					mr.ROLE_ID IN
+					(
+						SELECT 
+							r.ROLE_ID FROM ROLE_INFO r where r.ROLE_SIGN  IN 
+							(
+								'517a4e05b5d44b5096e9b3bd04bec654','c401a1050fe64b29ba60997e2a576d52',
+							 	'9e635bb0864f4833aa06f0f1336cad34','70eed5ac1d7048d68f3648df7640b6a1'
+							 )
+					)
+			) AND
+			ub.USER_ID NOT IN
+			(
+				SELECT DISTINCT(ck.USER_ID) FROM CHECK_DETAIL ck WHERE ck.CHECK_DATE = CURRENT_DATE()
+			)
+	</select>
+</sqlMap>

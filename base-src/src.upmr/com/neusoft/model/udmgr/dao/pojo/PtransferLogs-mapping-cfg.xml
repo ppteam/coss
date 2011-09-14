@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="PtransferLogs">
+	<typeAlias alias="PtransferLogs" type="com.neusoft.model.udmgr.dao.pojo.PtransferLogs" />
+	<insert id="insert" parameterClass="PtransferLogs">
+		INSERT INTO PRO_TRANSFER_LOGS
+			(STATS_ID,PROJECT_ID,USER_ID,ROLE_TYPE,JOININ_DATE,LEAVE_DATE,CURRT_STATS)
+		VALUES
+			(#statsId#,#projectId#,#userId#,#roleType#,now(),now(),1)
+	</insert>
+	<update id="updateById" parameterClass="PtransferLogs">
+		UPDATE 
+			PRO_TRANSFER_LOGS
+		SET
+			ROLE_TYPE = #roleType#,
+			LEAVE_DATE = now(),
+			CURRT_STATS = #curtStats#
+		WHERE
+			STATS_ID = #statsId#
+	</update>
+	<select id="query_list_by_projectId" parameterClass="string" resultClass="PtransferLogs">
+		SELECT
+			t.STATS_ID as statsId,
+			t.PROJECT_ID as projectId,
+			t.USER_ID as userId,
+			t.ROLE_TYPE as roleType,
+			date_format(t.JOININ_DATE,'%Y-%m-%d') as joinDate,
+			date_format(t.LEAVE_DATE,'%Y-%m-%d') as leaveDate,
+			t.CURRT_STATS as curtStats,
+			u.USER_NAME as userName
+		FROM
+			PRO_TRANSFER_LOGS t
+		LEFT JOIN
+			USER_BASIC u ON u.USER_ID = t.USER_ID
+		WHERE
+			t.CURRT_STATS = 1 AND
+			t.PROJECT_ID = #value# 
+		ORDER BY t.ROLE_TYPE DESC
+	</select>
+	<select id="query_psmer_by_projectId" parameterClass="string" resultClass="string">
+		SELECT
+			p.USER_ID as  psmerId
+		FROM
+			PRO_TRANSFER_LOGS p
+		WHERE
+			p.PROJECT_ID = #value# AND 
+			p.ROLE_TYPE = 'c401a1050fe64b29ba60997e2a576d52' AND 
+			p.CURRT_STATS =1
+	</select>
+	<select id="query_userlist_by_projectId" parameterClass="string" resultClass="ComboxModel">
+		SELECT
+			p.USER_ID as regValue,
+			u.USER_NAME as displayValue
+		FROM
+			PRO_TRANSFER_LOGS p
+			LEFT JOIN USER_BASIC u ON p.USER_ID = u.USER_ID
+		WHERE
+			p.PROJECT_ID = #value#
+	</select>
+	<select id="exist_Logs" parameterClass="PtransferLogs" resultClass="PtransferLogs">
+		SELECT
+			t.STATS_ID as statsId,
+			t.PROJECT_ID as projectId,
+			t.USER_ID as userId,
+			t.ROLE_TYPE as roleType
+		FROM
+			PRO_TRANSFER_LOGS t
+		WHERE
+			t.CURRT_STATS = 1 AND 
+			t.PROJECT_ID = #projectId#
+			<dynamic>
+				<isNotEmpty prepend=" AND " property="statsId">
+					STATS_ID NOT IN (#statsId#)
+				</isNotEmpty>
+			</dynamic>
+	</select>
+</sqlMap>

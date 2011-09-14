@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<bean id="dailyReportDao" class="com.neusoft.core.dao.Impl.GenericEntityDao" parent="AbstractEntityDao">
+		<property name="nameSpace" value="DailyReport" />
+	</bean>
+	<!-- defined filter list -->
+	<bean id="AbstractAdapterFilter" class="com.neusoft.model.report.service.AbstractAdapterFilter"
+		parent="FilterBase" abstract="true">
+		<property name="dailyReportDao" ref="dailyReportDao" />
+	</bean>
+	<!-- defined filter list -->
+	<!-- 下拉框数据 -->
+	<util:list id="daily_report_dict_list">
+		<value>projActivity</value>
+		<value>subProjActivity</value>
+		<value>manHourType</value>
+		<value>dailyReportWorkStatus</value>
+		<value>begoffType</value>
+	</util:list>
+	<!-- ===========================chain========================= -->
+	<util:list id="init_dayReport_data_chain">
+		<bean class="com.neusoft.core.chain.general.InitParameterFilter" parent="FilterBase">
+			<property name="paramMaps">
+				<util:map>
+					<entry key="catalgList" value-ref="daily_report_dict_list" />
+				</util:map>
+			</property>
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="daily_report_list" />
+			<property name="statementName" value="DictRecord.query_record_by_sire" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="projectName_self" />
+			<property name="statementName" value="DailyReport.selectAllProject_of_self" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2OptionModelFilter" parent="FilterBase">
+			<property name="keys">
+				<util:list>
+					<value>daily_report_list</value>
+					<value>projectName_self</value>
+				</util:list>
+			</property>
+			<property name="fixedKeys" value="project_info_data" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2ModelMapFilter" parent="FilterBase">
+			<property name="keyList">
+				<util:list value-type="java.lang.String">
+					<value>optionData</value>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+	<!-- ===========================chain========================= -->
+	<util:list id="init_viewReport_data_chain">
+		<bean class="com.neusoft.core.chain.general.InitParameterFilter" parent="FilterBase">
+			<property name="paramMaps">
+				<util:map>
+					<entry key="catalgList" value-ref="daily_report_dict_list" />
+				</util:map>
+			</property>
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="daily_report_list" />
+			<property name="statementName" value="DictRecord.query_record_by_sire" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="projectName_self" />
+			<property name="statementName" value="ProjectInfo.query_legal_projects" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2OptionModelFilter" parent="FilterBase">
+			<property name="keys">
+				<util:list>
+					<value>daily_report_list</value>
+					<value>projectName_self</value>
+				</util:list>
+			</property>
+			<property name="fixedKeys" value="dataSet_prolist" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2ModelMapFilter" parent="FilterBase">
+			<property name="keyList">
+				<util:list value-type="java.lang.String">
+					<value>optionData</value>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+	<!-- ================ split ================ -->
+	<util:list id="query_project_userlist_chain">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="notNull" value="true" />
+			<property name="paramKey" value="projectId" />
+			<property name="resultKey" value="project_user_list" />
+			<property name="statementName" value="DailyReport.query_userlist_by_projectId" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="project_user_list" />
+		</bean>
+	</util:list>
+	<!-- ================ split ================ -->
+	<util:list id="find_all_daily_report_filter">
+		<bean class="com.neusoft.core.chain.general.PaginationQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="json_dailyReport_list" />
+			<property name="statementName" value="DailyReport.selectAll" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="json_dailyReport_list" />
+		</bean>
+	</util:list>
+	<!-- ================ split ================ -->
+	<util:list id="find_all_daily_report_chain">
+		<bean class="com.neusoft.core.chain.general.PaginationQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="json_dailyReport_all_list" />
+			<property name="statementName" value="DailyReport.view_empleey_day_note" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="json_dailyReport_all_list" />
+		</bean>
+	</util:list>
+	<!-- ================ split ================ -->
+	<util:list id="find_all_daily_report_byid_filter">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="notNull" value="true" />
+			<property name="single" value="true" />
+			<property name="paramKey" value="dreportID" />
+			<property name="resultKey" value="daily_report_list_byid" />
+			<property name="statementName" value="DailyReport.queryById" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="daily_report_list_byid" />
+		</bean>
+	</util:list>
+	<!-- ================ split ================ -->
+	<util:list id="find_detail_daily_report_byid_filter">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="notNull" value="true" />
+			<property name="paramKey" value="dreportID" />
+			<property name="resultKey" value="daily_report_byid" />
+			<property name="single" value="true" />
+			<property name="statementName" value="DailyReport.queryDetailById" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="daily_report_byid" />
+		</bean>
+	</util:list>
+	<!-- ================ split ================ -->
+	<util:list id="batch_edit_dailyReps_chain">
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="0" />
+		</bean>
+		<bean class="com.neusoft.model.report.service.InitBatchHandlerFilter" parent="FilterBase" />
+		<bean class="com.neusoft.core.chain.general.BatchExecuteStatementFilter" parent="SqlMapClientSupportFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="statements">
+				<util:list value-type="java.lang.String">
+					<value>DailyReport.batch_delete</value>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="com.neusoft.model.report.service.DailyReportBaseFilter" parent="AbstractAdapterFilter" />
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="1" />
+		</bean>
+	</util:list>
+	<!-- ================ split ================ -->
+	<util:list id="saveOrupdate_eDailyReport_chain">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="single" value="true" />
+			<property name="notNull" value="true" />
+			<property name="paramKey" value="instance.projectID" />
+			<property name="resultKey" value="hours_rules" />
+			<property name="statementName" value="ProjectInfo.query_hoursRule_ById" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="single" value="true" />
+			<property name="notNull" value="true" />
+			<property name="paramKey" value="instance" />
+			<property name="resultKey" value="workhours_set" />
+			<property name="statementName" value="DailyReport.sum_workhours_by_day" />
+		</bean>
+		<bean class="com.neusoft.model.report.service.CheckDailyReportOfWorkHoursFilter" parent="AbstractAdapterFilter" />
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="0" />
+		</bean>
+		<bean class="com.neusoft.model.report.service.DailyReportBaseFilter" parent="AbstractAdapterFilter" />
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="1" />
+		</bean>
+	</util:list>
+	<!-- ================ remove data ================ -->
+	<util:list id="remove_eDailyReport_chain">
+		<bean class="com.neusoft.core.chain.general.BatchExecuteStatementFilter" parent="SqlMapClientSupportFilter">
+			<property name="paramKey" value="instance" />
+			<property name="statements">
+				<util:list value-type="java.lang.String">
+					<value>DailyReport.deleteById</value>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+	<!-- ================ ajax action config ================ -->
+	<bean id="RemoteDailyReportActionImpl" class="com.neusoft.model.report.facade.Impl.RemoteActionImpl"
+		scope="request" parent="AbstractAjaxAction">
+		<dwr:remote javascript="IRemoteDailyReportAction">
+			<dwr:include method="saveOrUpdateDailyReport" />
+			<dwr:include method="batEditDailyReport" />
+		</dwr:remote>
+		<aop:scoped-proxy proxy-target-class="false" />
+	</bean>
+</beans>

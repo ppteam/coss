@@ -1,0 +1,239 @@
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+<sqlMap namespace="EWeekReport">
+	<typeAlias alias="EWeekReport" type="com.neusoft.model.eweekreport.dao.pojo.EWeekReport" />
+	<insert id="insert" parameterClass="EWeekReport">
+		INSERT INTO 
+			EWEEKLY_REPORT (WREPORT_ID,USER_ID,START_DATE,END_DATE,
+			 DEPT_ID,REPORT_NO,RECORD_DATE,RECORDOR_ID,
+			 WORK_SUMMARY,NWEEK_PLAN,UNSOLVE_PROBLEM)
+		VALUES
+			(#wreportID#,#userID#,#startDate#,#endDate#,
+			 #deptID:CHAR#,#reportNo#,
+			 CURRENT_DATE(),#userID#,
+			 #workSummary#,#nweekPlan#,#unsolveProblem:VARCHAR#)
+	</insert>
+	<update id="updateById" parameterClass="EWeekReport">
+		UPDATE 
+			EWEEKLY_REPORT 
+		SET
+			REPORT_NO=#reportNo#,
+			WORK_SUMMARY=#workSummary#,
+			NWEEK_PLAN=#nweekPlan#,
+			UNSOLVE_PROBLEM=#unsolveProblem#
+		WHERE 
+			WREPORT_ID = #wreportID#
+	</update>
+	<select id="queryById" parameterClass="string" resultClass="EWeekReport">
+		select
+			 ew.WREPORT_ID as wreportID,
+			 <!-- ew.USER_ID as userID, -->
+			 ub.USER_NAME as userID,
+			 ew.START_DATE as startDate,
+			 ew.END_DATE as endDate,
+			 ew.DEPT_ID as deptID,
+			 ew.REPORT_NO as reportNo,
+			 ew.RECORD_DATE as recordDate,
+			 ew.RECORDOR_ID as recordorID,
+			 ew.WORK_SUMMARY as workSummary,
+			 ew.NWEEK_PLAN as nweekPlan,
+			 ew.UNSOLVE_PROBLEM as unsolveProblem
+		from
+			eweekly_report as ew
+				LEFT JOIN  user_basic AS ub ON ew.USER_ID=ub.USER_ID 
+		where ew.WREPORT_ID=#value#
+	</select>
+	<!-- ============================ split =================================== -->
+	<select id="query_all_for_view_count" parameterClass="map" resultClass="int">
+		SELECT
+			COUNT(ew.WREPORT_ID)
+		FROM
+			EWEEKLY_REPORT as ew
+			LEFT JOIN  USER_BASIC AS ub ON ew.USER_ID=ub.USER_ID 
+		WHERE
+		<dynamic>
+			<iterate open=" ew.USER_ID IN (SELECT DISTINCT(pl.USER_ID) FROM PRO_TRANSFER_LOGS AS pl WHERE pl.PROJECT_ID IN (" close=")) " conjunction="," property="projectIds">
+					#projectIds[]#
+			</iterate>
+			<isNotEmpty property="userName" prepend=" AND ">
+				ub.USER_NAME LIKE #userName#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="query_all_for_view" parameterClass="map" resultClass="EWeekReport">
+		SELECT
+			 ew.WREPORT_ID as wreportID,
+			 ew.USER_ID as userID,
+			 ub.USER_NAME as userName,
+			 ew.START_DATE as startDate,
+			 ew.END_DATE as endDate,
+			 ew.DEPT_ID as deptID,
+			 dept.DEPT_NAME as deptName,
+			 ew.REPORT_NO as reportNo,
+			 ew.RECORD_DATE as recordDate,
+			 ew.WORK_SUMMARY as workSummary,
+			 ew.NWEEK_PLAN as nweekPlan,
+			 ew.UNSOLVE_PROBLEM as unsolveProblem,
+			 (	
+			 	SELECT 
+			 		SUM(er.WORK_HOURS) 
+			 	FROM 
+			 		EDAILY_REPORT er 
+			 	WHERE 
+			 		er.USER_ID = ew.USER_ID AND
+			 		er.WORK_TYPE = '0d0cc048adf440edb55d8e53d756439c' AND
+			 		er.REPORT_DATE BETWEEN ew.START_DATE AND ew.END_DATE
+			 )  as norHours,
+			 (	
+			 	SELECT 
+			 		SUM(er.WORK_HOURS) 
+			 	FROM 
+			 		EDAILY_REPORT er 
+			 	WHERE 
+			 		er.USER_ID = ew.USER_ID AND
+			 		er.WORK_TYPE = 'dba8abe0a65945a49ebfc587c947d920' AND
+			 		er.REPORT_DATE BETWEEN ew.START_DATE AND ew.END_DATE
+			 )  as addHours,
+			  (	
+			 	SELECT 
+			 		SUM(er.WORK_HOURS) 
+			 	FROM 
+			 		EDAILY_REPORT er 
+			 	WHERE 
+			 		er.USER_ID = ew.USER_ID AND
+			 		er.WORK_TYPE IN ('5874f025064a423c935c215874a14f45','3692b9cd731a452ea9e9c55efa5c9618') AND
+			 		er.REPORT_DATE BETWEEN ew.START_DATE AND ew.END_DATE
+			 )  as evlHours
+		FROM
+			EWEEKLY_REPORT AS ew
+				LEFT JOIN  USER_BASIC AS ub ON ew.USER_ID=ub.USER_ID 
+				LEFT JOIN  DEPARTMENT_INFO AS dept on ew.DEPT_ID=dept.DEPT_ID
+		WHERE 
+		<dynamic>
+			<iterate open=" ew.USER_ID IN (SELECT DISTINCT(pl.USER_ID) FROM PRO_TRANSFER_LOGS AS pl WHERE pl.PROJECT_ID IN (" close=")) " conjunction="," property="projectIds">
+				#projectIds[]#
+			</iterate>
+			<isNotEmpty property="userName" prepend=" AND ">
+				ub.USER_NAME LIKE #userName#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY ew.END_DATE DESC
+		LIMIT 
+			#start#,#limit#
+	</select>
+	
+	<!-- ============================ split =================================== -->
+	<select id="selectAllbySelf_count" parameterClass="map" resultClass="int">
+		SELECT
+			COUNT(WREPORT_ID)
+		FROM
+			EWEEKLY_REPORT 
+		WHERE 
+			USER_ID=#KEY_USERID#
+	</select>
+	<!-- 按个人查周报列表 -->
+	<select id="selectAllbySelf" parameterClass="map" resultClass="EWeekReport">
+		SELECT
+			 ew.WREPORT_ID as wreportID,
+			 ew.USER_ID as userID,
+			 ew.START_DATE as startDate,
+			 ew.END_DATE as endDate,
+			 ew.DEPT_ID as deptID,
+			 dept.DEPT_NAME as deptName,
+			 ew.REPORT_NO as reportNo,
+			 ew.RECORD_DATE as recordDate,
+			 ew.RECORDOR_ID as recordorID,
+			 ew.WORK_SUMMARY as workSummary,
+			 ew.NWEEK_PLAN as nweekPlan,
+			 ew.UNSOLVE_PROBLEM as unsolveProblem,
+			 IF(WEEK(ew.END_DATE) = WEEK(CURRENT_DATE()),1,0) as editEnable,
+			 (	
+			 	SELECT 
+			 		SUM(er.WORK_HOURS) 
+			 	FROM 
+			 		EDAILY_REPORT er 
+			 	WHERE 
+			 		er.USER_ID = ew.USER_ID AND
+			 		er.WORK_TYPE = '0d0cc048adf440edb55d8e53d756439c' AND
+			 		er.REPORT_DATE BETWEEN ew.START_DATE AND ew.END_DATE
+			 )  as norHours,
+			 (	
+			 	SELECT 
+			 		SUM(er.WORK_HOURS) 
+			 	FROM 
+			 		EDAILY_REPORT er 
+			 	WHERE 
+			 		er.USER_ID = ew.USER_ID AND
+			 		er.WORK_TYPE = 'dba8abe0a65945a49ebfc587c947d920' AND
+			 		er.REPORT_DATE BETWEEN ew.START_DATE AND ew.END_DATE
+			 )  as addHours,
+			  (	
+			 	SELECT 
+			 		SUM(er.WORK_HOURS) 
+			 	FROM 
+			 		EDAILY_REPORT er 
+			 	WHERE 
+			 		er.USER_ID = ew.USER_ID AND
+			 		er.WORK_TYPE IN ('5874f025064a423c935c215874a14f45','3692b9cd731a452ea9e9c55efa5c9618') AND
+			 		er.REPORT_DATE BETWEEN ew.START_DATE AND ew.END_DATE
+			 )  as evlHours
+		FROM
+			EWEEKLY_REPORT AS ew
+			LEFT JOIN  user_basic AS ub ON ew.USER_ID=ub.USER_ID 
+			LEFT JOIN  department_info AS dept on dept.DEPT_ID = ew.DEPT_ID
+		WHERE 
+			ew.USER_ID=#KEY_USERID#
+		ORDER BY ew.START_DATE DESC
+		LIMIT 
+			#start#,#limit#
+	</select>
+	<select id="weekReport_check_All_Unique" parameterClass="EWeekReport" resultClass="int">
+		SELECT 
+			COUNT(ew.WREPORT_ID)
+		FROM 
+			EWEEKLY_REPORT as ew
+		WHERE
+			(ew.REPORT_NO = #reportNo#) OR
+			(
+				ew.USER_ID=#userID# AND
+				(
+					(#startDate# BETWEEN ew.START_DATE AND ew.END_DATE) OR 
+					(#endDate# BETWEEN ew.START_DATE AND ew.END_DATE) 
+				)
+			)
+	</select>
+	<select id="weekReport_check_No_Unique" parameterClass="EWeekReport" resultClass="int">
+		SELECT 
+			COUNT(ew.WREPORT_ID)
+		FROM 
+			EWEEKLY_REPORT as ew
+		WHERE
+			ew.REPORT_NO = #reportNo# 
+	</select>
+	<delete id="deleteById" parameterClass="EWeekReport">
+		DELETE FROM EWEEKLY_REPORT WHERE WREPORT_ID = #wreportID#
+	</delete>
+	<select id="query_detail_wreport" parameterClass="EWeekReport" resultClass="DailyReport">
+		SELECT
+			 er.DREPORT_ID as dreportID,
+			 pif.PROJECT_NAME as projectName,
+			 ub.USER_NAME as userName,
+			 dept.DEPT_NAME as deptName,
+			 er.REPORT_DATE as reportDate,
+			 er.WORK_HOURS as workHours,
+			 d1.ENTRY_NAME as workType,
+			 d2.ENTRY_NAME as workSubActivity,
+			 er.WORK_CONTENT as workContent
+		FROM
+			EDAILY_REPORT AS er
+			 	LEFT JOIN  project_info   AS pif  ON er.PROJECT_ID=pif.PROJECT_ID
+				LEFT JOIN  user_basic     AS ub   ON er.USER_ID=ub.USER_ID 
+				LEFT JOIN  dict_catalog AS d1 on  er.WORK_TYPE=d1.CATALOG_ID
+				LEFT JOIN  dict_catalog AS d2 on  er.WORK_SUB_ACTIVITY=d2.CATALOG_ID
+				LEFT JOIN  department_info AS dept on er.DEPT_ID=dept.DEPT_ID
+		WHERE 
+			er.USER_ID = #userID# AND
+			er.REPORT_DATE BETWEEN #startDate# AND #endDate#
+	</select>
+</sqlMap>

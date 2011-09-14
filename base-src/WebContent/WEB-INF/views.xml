@@ -1,0 +1,75 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:mvc="http://www.springframework.org/schema/mvc"
+	xmlns:util="http://www.springframework.org/schema/util"
+	xsi:schemaLocation="http://www.springframework.org/schema/mvc http://www.springframework.org/schema/mvc/spring-mvc-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<!-- ============= AbstractXlsView ================= -->
+	<bean id="AbstractXlsView" class="com.neusoft.model.reportforms.service.AbstractXlsViewResolvers"
+		abstract="true">
+		<property name="contentType" value="application/vnd.ms-excel;charset=UTF-8" />
+		<property name="configuration" ref="configurationImpl" />
+	</bean>
+	<bean id="ProjectMemberViewResolvers" class="com.neusoft.model.reportforms.service.ProjectMemberViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/project_member.xls" />
+	</bean>
+	<bean id="WorkDetailViewResolvers" class="com.neusoft.model.reportforms.service.WorkDetailViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/work_detail.xls" />
+	</bean>
+	<bean id="OverWorkViewResolvers" class="com.neusoft.model.reportforms.service.OverWorkViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/over_work_detail.xls" />
+	</bean>
+	<bean id="DailyExportViewResolvers" class="com.neusoft.model.reportforms.service.DailyExportViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/daily_report.xls" />
+	</bean>
+	<bean id="DutyCollectViewResolvers" class="com.neusoft.model.reportforms.service.DutyCollectViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/user_duty.xls" />
+	</bean>
+	<bean id="PerWeekViewResolvers" class="com.neusoft.model.reportforms.service.PerWeekViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/personWeekly.xls" />
+	</bean>
+	<bean id="StaffMonthCollectViewResolvers" class="com.neusoft.model.reportforms.service.StaffMonthViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/staffMonthCollect.xls" />
+	</bean>
+	<bean id="ProjectStaffViewResolvers" class="com.neusoft.model.reportforms.service.ProjectStaffViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/projectStaffCollect.xls" />
+	</bean>
+	<bean id="ProjMonthViewResolvers" class="com.neusoft.model.reportforms.service.ProjMonthViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/projMonthCollect.xls" />
+	</bean>
+	<bean id="StaffInfoViewResolvers" class="com.neusoft.model.reportforms.service.StaffInfoViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/staffBasicInfo.xls" />
+	</bean>
+	<bean id="AddrBookViewResolvers" class="com.neusoft.model.reportforms.service.AddrBookViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/AddressBook.xls" />
+	</bean>
+	<bean id="ProjWeekViewResolvers" class="com.neusoft.model.reportforms.service.ProjWeekViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/proweekforms.xls" />
+	</bean>
+	<bean id="DepProjWeekViewResolvers" class="com.neusoft.model.reportforms.service.DepProjWeekViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/dep_pw_rep_tmp.xls" />
+	</bean>
+	<bean id="WuCanDetailViewResolvers" class="com.neusoft.model.reportforms.service.WuCanDetailViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/wc_assist.xls" />
+	</bean>
+	<bean id="CheckDetailTotalViewResolvers" class="com.neusoft.model.reportforms.service.CheckDetailTotalViewResolvers"
+		parent="AbstractXlsView">
+		<property name="xlsPath" value="classpath:com/neusoft/xlsTemplat/ck_totals.xls" />
+	</bean>
+</beans>

@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+	
+<sqlMap namespace="TeamTransLogs">
+	<typeAlias alias="TeamTransLogs" type="com.neusoft.model.udmgr.dao.pojo.TeamTransLogs" />
+	<insert id="insert" parameterClass="TeamTransLogs">
+		INSERT INTO TEAM_TRANSFER_LOGS
+			(TRANSFER_ID,DEPT_ID,USER_ID,JOIN_DATE)
+		VALUES
+			(#transferId#,#deptId#,#userId#,CURRENT_DATE())
+	</insert>
+	<update id="updateById" parameterClass="string">
+		UPDATE 
+			TEAM_TRANSFER_LOGS 
+		SET
+			LEAVE_DATE = CURRENT_DATE()
+		WHERE
+			LEAVE_DATE IS NULL AND
+			USER_ID = #value#
+	</update>
+	<select id="query_list_status_by_userId" parameterClass="string" resultClass="TeamTransLogs">
+		SELECT
+			t.TRANSFER_ID as transferId,
+			t.USER_ID as userId,
+			t.DEPT_ID as deptId,
+			t.JOIN_DATE as joinDate,
+			t.LEAVE_DATE as leaveDate
+		FROM
+			TEAM_TRANSFER_LOGS t
+		WHERE
+			t.USER_ID = #value# AND
+			t.ACTIVE_DATE = 
+				(
+					SELECT MAX(l.JOIN_DATE) 
+					FROM TEAM_TRANSFER_LOGS l 
+					WHERE l.USER_ID = #value#
+				)
+	</select>
+</sqlMap>

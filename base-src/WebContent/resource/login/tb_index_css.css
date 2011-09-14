@@ -1,0 +1,46 @@
+* {font-family:verdana, sans-serif;font-size:12px;}
+html {overflow:hidden;}
+body {background-image:url(PNG8/user_all_bg.png);overflow:hidden;}
+#logon {display:none;position:absolute;width:800px;height:600px;background:transparent url(PNG24/logon.png) 0 0 no-repeat;}
+/* .over {background-image:url(PNG24/logon_hover.png);} */
+#logon .tbLogonPanel, #logon .logonSubmit {background:transparent url(PNG24/tb_logon_panel.png) 0 0 no-repeat;}
+#logon .tbLogonPanel {width:400px;height:150px;position:absolute;top:201px;left:193px;}
+#logon .logonPanel {
+	position:absolute;
+	width:250px;
+	top:45px;
+	left:15px;
+}
+#logon .logonPanel label, #logon .logonPanel a {float:left;width:90px;margin:5px 0;padding-right:10px;color:white;font-weight:bold;text-align:right;}
+#logon .logonPanel .eleWrapper {float:left;width:150px;margin:5px 0;}
+#logon .logonPanel .eleWrapper .textfield {border:0;background:transparent;width:128px;height:17px;color:white;padding-top:2px;padding-left:2px;}
+#logon .logonPanel .eleWrapper .selector {width:110px;}
+#logon .logonPanel .eleWrapper .selectorIcon {border:0;background:transparent;width:17px;height:17px;cursor:pointer;}
+#logon .logonSubmit {position:absolute;width:140px;height:140px;top:5px;right:0;cursor:pointer;background-position:right -605px;display:none;}
+#logon .logonSubmit input {border:0;background:transparent;}
+.browserCompatibility {display:none;position:absolute;z-index:32767;right:0;bottom:0;background:transparent url(PNG24/compatibility.png) 0 0 no-repeat;}
+
+#logon .validateCode {background-position:left -150px;}
+#logon .mailCA {background-position:left -300px;}
+#logon .mailCAvalidateCode {background-position:left -450px;}
+#logon .validateCode .logonPanel, #logon .mailCA .logonPanel {top:30px;}
+#logon .mailCAvalidateCode .logonPanel {top:15px;}
+
+#standardLogon {background:#f0f0f0;border:1px solid #bbb;position:absolute;padding:10px 20px;right:100px;bottom:50%;}
+#standardLogon .logonPanel label {line-height:24px;}
+#standardLogon .logonPanel input {width:150px;}
+#standardLogon .logonSubmit {padding-top:10px;}
+#standardLogon .logonSubmit input {font-size:14px;font-weight:bold;}
+
+/* tbException */
+.tbException {position:absolute;top:0;width:100%;display:none;z-index:32765;}
+.tbException .exceptionBody {margin-left:auto;margin-right:auto;width:609px;height:94px;background:transparent url(PNG24/exception.png) 0 0 no-repeat;}
+.tbException .exceptionBody .exceptionContent {float:left;width:420px;padding:20px 0 0 120px;font-size:14px;font-weight:bold;color:#444;font-family:verdana, sans-serif;}
+.tbException .exceptionBody .exceptionContent .error {font-size:14px;}
+.tbException .exceptionBody input {float:left;height:40px;width:40px;margin-left:20px;margin-top:3px;background:transparent;border:0;cursor:pointer;}
+
+/*
+.tbExceptionSmall .exceptionBody {width:426px;height:66px;background-image:url(PNG24/exception_small.png);}
+.tbExceptionSmall .exceptionBody .exceptionContent {width:260px;padding:10px 0 0 80px;}
+.tbExceptionSmall .exceptionBody input {height:28px;width:30px;margin-left:50px;margin-top:3px;}
+*/

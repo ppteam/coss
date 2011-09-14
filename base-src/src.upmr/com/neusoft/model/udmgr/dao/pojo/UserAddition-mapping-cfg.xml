@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="UserAddition">
+	<typeAlias alias="UserAddition" type="com.neusoft.model.udmgr.dao.pojo.UserAddition" />
+	<insert id="insert" parameterClass="UserAddition">
+	</insert>
+	<update id="updateById" parameterClass="UserAddition">
+	</update>
+	<select id="findById" parameterClass="string" resultClass="UserAddition">
+	</select>
+</sqlMap>

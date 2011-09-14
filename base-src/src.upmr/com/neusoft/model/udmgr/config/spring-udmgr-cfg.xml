@@ -1,0 +1,577 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context" xmlns:util="http://www.springframework.org/schema/util"
+	xmlns:dwr="http://www.directwebremoting.org/schema/spring-dwr" xmlns:aop="http://www.springframework.org/schema/aop"
+	xsi:schemaLocation="http://www.springframework.org/schema/aop http://www.springframework.org/schema/aop/spring-aop-3.0.xsd
+		http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.directwebremoting.org/schema/spring-dwr http://www.directwebremoting.org/schema/spring-dwr-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+	<!-- =========================== dao =========================== -->
+	<bean id="userBaseDao" class="com.neusoft.core.dao.Impl.GenericEntityDao" parent="AbstractEntityDao">
+		<property name="nameSpace" value="UserBaseInfo" />
+	</bean>
+	<bean id="todoListDao" class="com.neusoft.core.dao.Impl.GenericEntityDao" parent="AbstractEntityDao">
+		<property name="nameSpace" value="TodoList" />
+	</bean>
+	<bean id="projectInfoDao" class="com.neusoft.core.dao.Impl.GenericEntityDao" parent="AbstractEntityDao">
+		<property name="nameSpace" value="ProjectInfo" />
+	</bean>
+	<bean id="proMemberDao" class="com.neusoft.core.dao.Impl.GenericEntityDao" parent="AbstractEntityDao">
+		<property name="nameSpace" value="PtransferLogs" />
+	</bean>
+	<bean id="transLogsDao" class="com.neusoft.core.dao.Impl.GenericEntityDao" parent="AbstractEntityDao">
+		<property name="nameSpace" value="TeamTransLogs" />
+	</bean>
+	<bean id="proStatsDao" class="com.neusoft.core.dao.Impl.GenericEntityDao" parent="AbstractEntityDao">
+		<property name="nameSpace" value="ProjectStats" />
+	</bean>
+	<bean id="deptDao" class="com.neusoft.core.dao.Impl.GenericEntityDao" parent="AbstractEntityDao">
+		<property name="nameSpace" value="Department" />
+	</bean>
+	<!-- =========================== filter =========================== -->
+	<bean id="UdmgrAdapterFilter" class="com.neusoft.model.udmgr.service.AbstractAdapterFilter"
+		parent="FilterBase" abstract="true">
+		<property name="userBaseDao" ref="userBaseDao" />
+		<property name="projectDao" ref="projectInfoDao" />
+		<property name="teamTranLogDao" ref="transLogsDao" />
+		<property name="proMemberDao" ref="proMemberDao" />
+		<property name="proStatsDao" ref="proStatsDao" />
+		<property name="deptDao" ref="deptDao" />
+		<property name="todoListDao" ref="todoListDao" />
+	</bean>
+	<bean id="checkUserBaseFilter" class="com.neusoft.model.udmgr.service.CheckUserBaseFilter"
+		parent="UdmgrAdapterFilter" />
+	<!-- =========================== chians =========================== -->
+	<util:list id="user_dict_list">
+		<value>educationBackground</value>
+		<value>politic</value>
+		<value>qualification</value>
+		<value>projectStatus</value>
+		<value>degree</value>
+		<value>factoryStatus</value>
+	</util:list>
+	<util:list id="init_user_data_chain">
+		<bean class="com.neusoft.core.chain.general.InitParameterFilter" parent="FilterBase">
+			<property name="paramMaps">
+				<util:map>
+					<entry key="catalgList" value-ref="user_dict_list" />
+				</util:map>
+			</property>
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="dept_list" />
+			<property name="statementName" value="Department.selectAll_for_options" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="dict_list" />
+			<property name="statementName" value="DictRecord.query_record_by_sire" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2OptionModelFilter" parent="FilterBase">
+			<property name="keys">
+				<util:list>
+					<value>dict_list</value>
+					<value>dept_list</value>
+				</util:list>
+			</property>
+			<property name="fixedKeys"
+				value="optionStruts|educationBackground|degree|qualification|politic|factoryStatus|projectStatus" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2ModelMapFilter" parent="FilterBase">
+			<property name="keyList">
+				<util:list value-type="java.lang.String">
+					<value>optionData</value>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="runing_chain_dicts">
+		<value>posttype</value>
+	</util:list>
+	<util:list id="init_user_runing_chain">
+		<bean class="com.neusoft.core.chain.general.InitParameterFilter" parent="FilterBase">
+			<property name="paramMaps">
+				<util:map>
+					<entry key="catalgList" value-ref="runing_chain_dicts" />
+				</util:map>
+			</property>
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="dict_list" />
+			<property name="statementName" value="DictRecord.query_record_by_sire" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="resultKey" value="dept_list" />
+			<property name="statementName" value="Department.query_all_for_options" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2OptionModelFilter" parent="FilterBase">
+			<property name="keys">
+				<util:list>
+					<value>dict_list</value>
+					<value>dept_list</value>
+				</util:list>
+			</property>
+			<property name="fixedKeys" value="dept_data" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2ModelMapFilter" parent="FilterBase">
+			<property name="keyList">
+				<util:list value-type="java.lang.String">
+					<value>optionData</value>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="query_project_member_chain">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="notNull" value="true" />
+			<property name="paramKey" value="projectId" />
+			<property name="resultKey" value="project_member_list" />
+			<property name="statementName" value="PtransferLogs.query_list_by_projectId" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="project_member_list" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="query_project_allmember_chain">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="notNull" value="true" />
+			<property name="paramKey" value="projectId" />
+			<property name="resultKey" value="project_member_list" />
+			<property name="statementName" value="PtransferLogs.query_userlist_by_projectId" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="project_member_list" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="change_passwd_chain">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="notNull" value="true" />
+			<property name="paramKey" value="userId" />
+			<property name="single" value="true" />
+			<property name="resultKey" value="user" />
+			<property name="statementName" value="UserBaseInfo.findById" />
+		</bean>
+		<bean class="com.neusoft.model.udmgr.service.ResetUserPasswordFilter" parent="UdmgrAdapterFilter" />
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="handle_todoList_chain">
+		<bean class="com.neusoft.model.udmgr.service.HandleTodoListFilter" parent="UdmgrAdapterFilter" />
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="init_user_role_chain">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="role_list" />
+			<property name="statementName" value="RoleInfo.query_roles_for_opts" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="resultKey" value="dept_list" />
+			<property name="statementName" value="Department.query_all_for_options" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2OptionModelFilter" parent="FilterBase">
+			<property name="keys">
+				<util:list>
+					<value>dept_list</value>
+					<value>role_list</value>
+				</util:list>
+			</property>
+			<property name="fixedKeys" value="roleopts|dept_data" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2ModelMapFilter" parent="FilterBase">
+			<property name="keyList">
+				<util:list value-type="java.lang.String">
+					<value>optionData</value>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="init_dept_base_chain">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="dept_list" />
+			<property name="statementName" value="Department.selectAll_for_options" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2OptionModelFilter" parent="FilterBase">
+			<property name="keys">
+				<util:list>
+					<value>dept_list</value>
+				</util:list>
+			</property>
+			<property name="fixedKeys" value="dept_data" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2ModelMapFilter" parent="FilterBase">
+			<property name="keyList">
+				<util:list value-type="java.lang.String">
+					<value>optionData</value>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="load_roles_byUserId_chian">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="userId" />
+			<property name="resultKey" value="roles_list" />
+			<property name="statementName" value="UserBaseInfo.load_role_by_userId" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="roles_list" />
+		</bean>
+	</util:list>
+	<util:list id="load_sign_byUserId_chian">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="userId" />
+			<property name="resultKey" value="roles_list" />
+			<property name="statementName" value="UserBaseInfo.load_role_sign_by_userId" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="roles_list" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="edit_user_map_role_chain">
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="0" />
+		</bean>
+		<bean class="com.neusoft.model.udmgr.service.HandleUserMapRoleFilter" parent="UdmgrAdapterFilter" />
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="1" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="dept_tree_xml_chain">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="resultKey" value="dept_tree" />
+			<property name="statementName" value="Department.queryForTree" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2TreeModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="dept_tree" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2XmlModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="dept_tree" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="list_enabled_user_chain">
+		<bean class="com.neusoft.core.chain.general.PaginationQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="json_user_list" />
+			<property name="statementName" value="UserBaseInfo.list_user_bydept" />
+		</bean>
+		<bean class="com.neusoft.model.udmgr.service.LoadRoleSetByUserListFilter" parent="SqlMapClientSupportFilter">
+			<property name="key_userList" value="json_user_list" />
+		</bean>
+		<bean class="com.neusoft.model.udmgr.service.LoadDataSetByUserListFilter" parent="SqlMapClientSupportFilter">
+			<property name="key_userList" value="json_user_list" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="json_user_list" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="list_all_user_chain">
+		<bean class="com.neusoft.core.chain.general.PaginationQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="json_user_list" />
+			<property name="statementName" value="UserBaseInfo.list_user_for_runing" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="json_user_list" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="find_user_byid_chian">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="notNull" value="true" />
+			<property name="paramKey" value="userId" />
+			<property name="resultKey" value="user_byid" />
+			<property name="single" value="true" />
+			<property name="statementName" value="UserBaseInfo.findById" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="user_byid" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="insert_user_BaseInfo_chain">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="UserBaseInfo" />
+			<property name="resultKey" value="user_ids_list" />
+			<property name="statementName" value="UserBaseInfo.check_isexist_user" />
+		</bean>
+		<bean class="com.neusoft.model.udmgr.service.CheckUserBaseFilter" parent="UdmgrAdapterFilter" />
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="0" />
+		</bean>
+		<bean class="com.neusoft.model.udmgr.service.HandleUserBaseFilter" parent="UdmgrAdapterFilter">
+			<property name="userKey" value="UserBaseInfo" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="1" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="user_leave_team_chain">
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="0" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.BatchExecuteStatementFilter" parent="SqlMapClientSupportFilter">
+			<property name="paramKey" value="userId" />
+			<property name="statements">
+				<util:list value-type="java.lang.String">
+					<value>UserBaseInfo.clear_user_byId</value>
+					<value>UserBaseInfo.clear_user_role</value>
+					<value>UserBaseInfo.clear_user_dataset</value>
+					<value>UserBaseInfo.clear_user_project</value>
+					<value>TeamTransLogs.updateById</value>
+				</util:list>
+			</property>
+		</bean>
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="1" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="user_rejoin_team_chain">
+		<bean class="com.neusoft.core.chain.general.BatchExecuteStatementFilter" parent="SqlMapClientSupportFilter">
+			<property name="paramKey" value="userId" />
+			<property name="statements">
+				<util:list value-type="java.lang.String">
+					<value>UserBaseInfo.rejoin_team_byId</value>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="batch_import_user_chain">
+		<bean class="com.neusoft.model.udmgr.service.CoverByts2UserFilter" parent="FilterBase">
+			<property name="configuration" ref="configurationImpl" />
+			<property name="key" value="fileBts" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="0" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.ExecuteBatchFilter" parent="SqlMapClientSupportFilter">
+			<property name="status" value="0" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.BatchInsertOrUpdateFilter" parent="SqlMapClientSupportFilter">
+			<property name="statement" value="UserBaseInfo.insert" />
+			<property name="listKey" value="userList" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.BatchInsertOrUpdateFilter" parent="SqlMapClientSupportFilter">
+			<property name="statement" value="TeamTransLogs.insert" />
+			<property name="listKey" value="logsList" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.BatchInsertOrUpdateFilter" parent="SqlMapClientSupportFilter">
+			<property name="statement" value="UserBaseInfo.insert_user_map_role" />
+			<property name="listKey" value="userMapRole" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.ExecuteBatchFilter" parent="SqlMapClientSupportFilter">
+			<property name="status" value="1" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="1" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="edit_user_BaseInfo_chain">
+		<bean class="com.neusoft.core.chain.general.BatchExecuteStatementFilter" parent="SqlMapClientSupportFilter">
+			<property name="paramKey" value="instance" />
+			<property name="statements">
+				<util:list value-type="java.lang.String">
+					<value>UserBaseInfo.updateBaseById</value>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="save_update_ProjectInfo_chain">
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="0" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="single" value="true" />
+			<property name="paramKey" value="ProjectInfo" />
+			<property name="resultKey" value="project_cnt" />
+			<property name="statementName" value="ProjectInfo.ckeck_unequel_project_num" />
+		</bean>
+		<bean class="com.neusoft.model.udmgr.service.HandleProjectInfoFilter" parent="UdmgrAdapterFilter">
+			<property name="keyCount" value="project_cnt" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="1" />
+		</bean>
+	</util:list>
+	<!-- ================== split tag =================== -->
+	<util:list id="load_access_data_byUserId_chian">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="userId" />
+			<property name="resultKey" value="access_data" />
+			<property name="statementName" value="UserBaseInfo.load_access_by_userId" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="access_data" />
+		</bean>
+	</util:list>
+	<!-- ========== split flag ============= -->
+	<util:list value-type="java.lang.String" id="project_dict_list">
+		<value>projectStatus</value>
+		<value>milestone</value>
+		<value>miltonStatus</value>
+		<value>roleType</value>
+	</util:list>
+	<util:list id="init_project_data_chain">
+		<bean class="com.neusoft.core.chain.general.InitParameterFilter" parent="FilterBase">
+			<property name="paramMaps">
+				<util:map>
+					<entry key="catalgList" value-ref="project_dict_list" />
+				</util:map>
+			</property>
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="dict_list" />
+			<property name="statementName" value="DictRecord.query_record_by_sire" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="dept_list" />
+			<property name="statementName" value="Department.selectAll_for_options" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2OptionModelFilter" parent="FilterBase">
+			<property name="keys">
+				<util:list>
+					<value>dict_list</value>
+					<value>dept_list</value>
+				</util:list>
+			</property>
+			<property name="fixedKeys" value="milestone|miltonStatus|dept_data|roleType|projectStatus" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2ModelMapFilter" parent="FilterBase">
+			<property name="keyList">
+				<util:list value-type="java.lang.String">
+					<value>optionData</value>
+				</util:list>
+			</property>
+		</bean>
+	</util:list>
+	<!-- ========== split flag ============= -->
+	<util:list id="query_project_list_chain">
+		<bean class="com.neusoft.core.chain.general.PaginationQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="json_project_data" />
+			<property name="statementName" value="ProjectInfo.query_paged_project" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="json_project_data" />
+		</bean>
+	</util:list>
+	<!-- ========== split flag ============= -->
+	<util:list id="query_user_ForOpt_chian">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="user_opts" />
+			<property name="statementName" value="UserBaseInfo.query_for_options" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="user_opts" />
+		</bean>
+	</util:list>
+	<!-- ========== split flag ============= -->
+	<util:list id="edit_project_member_chain">
+		<bean class="com.neusoft.model.udmgr.service.CheckProMemberFilter" parent="UdmgrAdapterFilter">
+			<property name="paramKey" value="instance" />
+		</bean>
+		<bean class="com.neusoft.model.udmgr.service.HandleProMemberFilter" parent="UdmgrAdapterFilter">
+			<property name="paramKey" value="instance" />
+		</bean>
+	</util:list>
+	<!-- ========== split flag ============= -->
+	<util:list id="query_todo_list_chian">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="notNull" value="true" />
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="todo_self_list" />
+			<property name="statementName" value="TodoList.query_todo_seft_list" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="notNull" value="true" />
+			<property name="paramKey" value="ctxself" />
+			<property name="resultKey" value="todo_drp_list" />
+			<property name="statementName" value="TodoList.query_todo_dreport_list" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.MergerCollectionFilter" parent="FilterBase">
+			<property name="type" value="list" />
+			<property name="keys" value="todo_self_list|todo_drp_list" />
+			<property name="resKey" value="todo_list" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="todo_list" />
+		</bean>
+	</util:list>
+	<!-- ========== split flag ============= -->
+	<util:list id="query_project_stats_chain">
+		<bean class="com.neusoft.core.chain.general.CommonsQueryFilter" parent="AbstractQueryFilter">
+			<property name="notNull" value="true" />
+			<property name="paramKey" value="projectId" />
+			<property name="resultKey" value="project_stats_list" />
+			<property name="statementName" value="ProjectStats.query_by_projectId" />
+		</bean>
+		<bean class="com.neusoft.core.chain.general.Result2JsonModelHandleFilter" parent="FilterBase">
+			<property name="paramKey" value="project_stats_list" />
+		</bean>
+	</util:list>
+	<!-- ========== split flag ============= -->
+	<util:list id="edit_projectStats_chain">
+		<bean class="com.neusoft.model.udmgr.service.HandleProStatsFilter" parent="UdmgrAdapterFilter">
+			<property name="paramKey" value="instance" />
+		</bean>
+	</util:list>
+	<!-- ========== split flag ============= -->
+	<util:list id="edit_access_data_power_chain">
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="0" />
+		</bean>
+		<bean class="com.neusoft.model.udmgr.service.HandleDateAccessSetFilter" parent="UdmgrAdapterFilter" />
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="1" />
+		</bean>
+	</util:list>
+	<!-- ========== split flag ============= -->
+	<util:list id="handle_dept_info_chain">
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="0" />
+		</bean>
+		<bean class="com.neusoft.model.udmgr.service.HandleDeptInfoFilter" parent="UdmgrAdapterFilter" />
+		<bean class="com.neusoft.core.chain.general.TransactionManagerFilter" parent="FilterBase">
+			<property name="statusAction" value="1" />
+		</bean>
+	</util:list>
+	<!-- ================= ajax bean ====================== -->
+	<bean id="UpmrRemoteActionImpl" class="com.neusoft.model.udmgr.facade.Impl.RemoteActionImpl"
+		parent="AbstractAjaxAction" scope="request">
+		<dwr:remote javascript="UpmrAjaxAction">
+			<dwr:include method="editUserBaseInfo" />
+			<dwr:include method="editProjectInfo" />
+			<dwr:include method="resetPassWord" />
+			<dwr:include method="editProjectMember" />
+			<dwr:include method="editProjectMilestone" />
+			<dwr:include method="editUserMapRole" />
+			<dwr:include method="editAccDataSet" />
+			<dwr:include method="saveOrUpdateUser" />
+			<dwr:include method="editTeamStats" />
+			<dwr:include method="insertOrUpdateDept" />
+			<dwr:include method="saveOrUpdateTodo" />
+			<dwr:include method="sycDateTime" />
+		</dwr:remote>
+		<aop:scoped-proxy proxy-target-class="false" />
+	</bean>
+</beans>

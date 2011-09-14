@@ -1,0 +1,367 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<!DOCTYPE sqlMap      
+	PUBLIC "-//ibatis.apache.org//DTD SQL Map 2.0//EN"      
+	"http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="UserBaseInfo">
+	<typeAlias alias="UserBaseInfo" type="com.neusoft.model.udmgr.dao.pojo.UserBaseInfo" />
+	<insert id="insert" parameterClass="UserBaseInfo">
+		INSERT INTO USER_BASIC
+			(USER_ID,DEPT_ID,USER_NAME,USER_SEXED,
+			WORKING_PLACE,USER_PASSWORD,USER_LOGINID,
+			ENABLED,TEAM_STATS,COMPANY_NAME,IP_ADDRESS,POST_TYPE)
+		VALUES
+			(#userId#,#deptId#,#name#,#sexed:INT#,
+			#workPlace:VARCHAR#,#password#,#loginId#,
+			1,1,#companyName:VARCHAR#,'255.255.255.255',#postType:VARCHAR#)
+	</insert>
+	<insert id="update_runing_user" parameterClass="UserBaseInfo">
+		UPDATE 
+			USER_BASIC
+		SET
+			DEPT_ID=#deptId#,USER_NAME=#name#,USER_SEXED=#sexed:INT#,
+			WORKING_PLACE=#workPlace:VARCHAR#,USER_LOGINID=#loginId#,
+			COMPANY_NAME = #companyName:VARCHAR#,
+			POST_TYPE = #postType:VARCHAR# 
+		WHERE
+			USER_ID = #userId#
+	</insert>
+	<!-- ===== clear userBase start ===== -->
+	<update id="rejoin_team_byId" parameterClass="string">
+		UPDATE
+			USER_BASIC
+		SET
+			TEAM_STATS = 1
+		WHERE
+			USER_ID = #value#
+	</update>
+	<!-- ===== clear userBase start ===== -->
+	<update id="clear_user_byId" parameterClass="string">
+		UPDATE
+			USER_BASIC
+		SET
+			ENABLED = 0,TEAM_STATS = 0
+		WHERE
+			USER_ID = #value#
+	</update>
+	<delete id="clear_user_role" parameterClass="string">
+		DELETE FROM
+			USER_MAP_ROLE
+		WHERE
+			USER_ID = #value#
+	</delete>
+	<delete id="clear_user_dataset" parameterClass="string">
+		DELETE FROM
+			ACCESS_DATA_POWER
+		WHERE
+			USER_ID = #value#
+	</delete>
+	<update id="clear_user_project">
+		UPDATE
+			PRO_TRANSFER_LOGS
+		SET
+			CURRT_STATS = 0
+		WHERE
+			USER_ID = #value#
+	</update>
+	<!-- ===== clear userBase end ===== -->
+	<update id="updateBaseById" parameterClass="UserBaseInfo">
+		UPDATE
+			USER_BASIC
+		SET
+			USER_IDENTITY=#identity#,
+			EXTENSION_NO=#extensionNo:VARCHAR#,
+			IP_ADDRESS=#ipAddress:VARCHAR#,
+			WORK_EMAIL=#workEmail:VARCHAR#,
+			CMPY_EMAIL=#cmpyEmail:VARCHAR#,
+			USER_MOBILENO=#mobileNo:VARCHAR#,
+			POLITICS_STATUS=#polticsStatus:VARCHAR#,
+			MARITAL_STATUS=#maritalStatus:INT#,
+			BIRTHDAY=#birthday:DATE#,
+			EMPLOYEE_NO=#employeeNo:VARCHAR#,
+			QUALIFICATIONS=#qualifications:VARCHAR#,
+			POST_TYPE=#postType:VARCHAR#,
+			EDUCATION_BG=#educationBg:VARCHAR#,
+			SPECIALTY_KNOW=#specialtyKnow:VARCHAR#,
+			GRADUATE_SCHOOL=#graduateSchool:VARCHAR#,
+			DEGREE=#degree:VARCHAR#,
+			WORKDATE=#workdate:DATE#,
+			ENABLED = #enabled#
+		WHERE
+			USER_ID = #userId#
+	</update>
+	<select id="findById" parameterClass="string" resultClass="UserBaseInfo">
+		SELECT
+			ub.USER_ID as userId,ub.DEPT_ID as deptId,
+			ub.USER_LOGINID as loginId,
+			ub.USER_PASSWORD as password,
+			ub.USER_NAME as name,
+			ub.USER_SEXED as sexed,
+			ub.USER_IDENTITY as identity,
+			ub.ENABLED as enabled,
+			ub.EXTENSION_NO as extensionNo,
+			ub.WORKING_PLACE as workPlace,
+			ub.IP_ADDRESS as ipAddress,
+			ub.WORK_EMAIL as workEmail,
+			ub.USER_MOBILENO as mobileNo,
+			ub.CMPY_EMAIL as cmpyEmail,
+			ub.POLITICS_STATUS as polticsStatus,
+			ub.MARITAL_STATUS as maritalStatus,
+			ub.BIRTHDAY as birthday,
+			ub.EMPLOYEE_NO as employeeNo,
+			ub.QUALIFICATIONS as qualifications,
+			ub.COMPANY_NAME as companyName,
+			ub.POST_TYPE as postType,
+			ub.EDUCATION_BG as educationBg,
+			ub.SPECIALTY_KNOW as specialtyKnow,
+			ub.GRADUATE_SCHOOL as graduateSchool,
+			ub.TEAM_STATS as teamStats,
+			dp.DEPT_NAME as deptName,
+			ub.WORKDATE AS workdate,
+			ub.DEGREE as degree
+		FROM
+			USER_BASIC ub
+		LEFT JOIN DEPARTMENT_INFO dp on dp.DEPT_ID = ub.DEPT_ID
+		WHERE
+			USER_ID = #value#
+	</select>
+	<select id="list_user_for_runing_count" parameterClass="map" resultClass="int">
+		SELECT
+			COUNT(u.USER_ID)
+		FROM
+			USER_BASIC u
+		WHERE
+			u.DEPT_ID NOT IN ('00000000000000000000000000000000')
+		<dynamic>
+			<isNotEmpty property="userName" prepend=" AND ">
+				u.USER_NAME LIKE #userName#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="list_user_for_runing" parameterClass="map" resultClass="UserBaseInfo">
+		SELECT
+			u.USER_ID AS userId,
+			u.DEPT_ID AS deptId,
+			u.USER_NAME AS name,
+			u.USER_SEXED AS sexed,
+			u.WORKING_PLACE AS workPlace,
+			d.DEPT_NAME as deptName,
+			u.COMPANY_NAME as companyName,
+			u.USER_LOGINID as loginId,
+			u.TEAM_STATS AS teamStats,
+			u.POST_TYPE as postType
+		FROM
+			USER_BASIC u
+		LEFT JOIN DEPARTMENT_INFO d ON d.DEPT_ID = u.DEPT_ID
+		WHERE
+			u.DEPT_ID NOT IN ('00000000000000000000000000000000')
+		<dynamic>
+			<isNotEmpty property="userName" prepend=" AND ">
+				u.USER_NAME LIKE #userName#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY 
+			u.DEPT_ID
+		LIMIT
+			#start#,#limit#
+	</select>
+	<select id="list_user_bydept_count" parameterClass="map" resultClass="int">
+		SELECT
+			COUNT(u.USER_ID)
+		FROM
+			USER_BASIC u
+		WHERE
+			u.TEAM_STATS = 1 
+		<dynamic>
+			<isNotEmpty property="access_data_set" prepend=" AND ">
+				<iterate open=" u.DEPT_ID IN (" close=")" conjunction="," property="access_data_set">
+					#access_data_set[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty property="userName" prepend=" AND ">
+				u.USER_NAME LIKE #userName#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="list_user_bydept" parameterClass="map" resultClass="UserBaseInfo">
+		SELECT
+			u.USER_ID AS userId,u.DEPT_ID AS deptId,u.USER_NAME AS name,USER_SEXED AS sexed,
+			u.USER_IDENTITY AS identity,u.EXTENSION_NO AS extensionNo,
+			u.WORKING_PLACE AS workPlace,u.IP_ADDRESS AS ipAddress,u.WORK_EMAIL AS workEmail,
+			u.USER_MOBILENO AS mobileNo,u.POLITICS_STATUS AS polticsStatus,
+			u.MARITAL_STATUS AS maritalStatus,u.BIRTHDAY AS birthday,u.CMPY_EMAIL as cmpyEmail,
+			u.EMPLOYEE_NO AS employeeNo,u.QUALIFICATIONS AS qualifications,
+			u.COMPANY_NAME AS companyName,u.ENABLED as enabled,
+			u.EDUCATION_BG AS educationBg,u.SPECIALTY_KNOW AS specialtyKnow,
+			u.GRADUATE_SCHOOL AS graduateSchool,u.DEGREE AS degree,u.WORKDATE AS workdate,
+			u.TEAM_STATS AS teamStats,u.USER_LOGINID as loginId
+		FROM
+			USER_BASIC u
+		WHERE
+			u.TEAM_STATS = 1
+		<dynamic>
+			<isNotEmpty property="access_data_set" prepend=" AND ">
+				<iterate open=" u.DEPT_ID IN (" close=")" conjunction="," property="access_data_set">
+					#access_data_set[]#
+				</iterate>
+			</isNotEmpty>
+			<isNotEmpty property="userName" prepend=" AND ">
+				u.USER_NAME LIKE #userName#
+			</isNotEmpty>
+		</dynamic>
+		ORDER BY 
+			u.DEPT_ID
+		LIMIT
+			#start#,#limit#
+	</select>
+	<select id="check_isexist_user" parameterClass="UserBaseInfo" resultClass="string">
+		SELECT
+			ub.USER_ID
+		FROM
+			USER_BASIC ub
+		WHERE
+			ub.USER_NAME = #name# 
+		<dynamic>
+			<isNotEmpty prepend=" OR" property="loginId">
+				ub.USER_LOGINID = #loginId#
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="query_for_login" parameterClass="string" resultClass="UserBaseInfo">
+		SELECT
+			u.USER_ID AS userId,u.USER_NAME AS name,u.USER_PASSWORD as password,
+			u.ENABLED as enabled,u.IP_ADDRESS as ipAddress,u.DEPT_ID as deptId,
+			d.DEPT_NAME as deptName,d.NODE_XPATH as deptPath
+		FROM
+			USER_BASIC u LEFT JOIN DEPARTMENT_INFO d ON d.DEPT_ID = u.DEPT_ID
+		WHERE
+			u.USER_LOGINID = #value#
+	</select>
+	<select id="query_for_options" parameterClass="map" resultClass="java.util.HashMap">
+		SELECT 
+			u.USER_ID AS regValue,u.USER_NAME AS displayValue
+		FROM
+			USER_BASIC u
+		WHERE
+			u.ENABLED = 1
+		<dynamic>
+			<isNotEmpty prepend=" AND" property="access_data_set">
+				<iterate open="u.DEPT_ID IN (" close=")" conjunction="," property="access_data_set">
+					#access_data_set[]#
+				</iterate>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+	<select id="load_role_by_userId" parameterClass="string" resultClass="string">
+		SELECT
+			t.ROLE_ID
+		FROM
+			USER_MAP_ROLE t
+		WHERE
+			t.USER_ID = #value#
+	</select>
+	<select id="load_role_sign_by_userId" parameterClass="string" resultClass="string">
+		SELECT 
+			DISTINCT(r.ROLE_SIGN) as regValue
+		FROM
+			ROLE_INFO r
+		WHERE
+			r.ENABLED = 1 AND
+			r.ROLE_ID IN (
+				SELECT m.ROLE_ID FROM USER_MAP_ROLE m WHERE m.USER_ID = #value#
+			)
+		GROUP BY r.ROLE_SIGN
+	</select>
+	<select id="load_role_by_userIds" parameterClass="map" resultClass="java.util.HashMap">
+		SELECT
+			t.USER_ID as userId,t.ROLE_ID as dataId,'role' as type
+		FROM
+			USER_MAP_ROLE t
+		WHERE
+			t.USER_ID IN ('NOROLE'
+			<dynamic>
+				<isNotEmpty prepend="," property="userIds">
+					<iterate conjunction="," property="userIds">
+						#userIds[]#
+					</iterate>
+				</isNotEmpty>
+			</dynamic>
+			)
+		ORDER BY
+			t.USER_ID
+	</select>
+	<select id="load_data_by_userIds" parameterClass="map" resultClass="java.util.HashMap">
+		SELECT
+			t.USER_ID as userId,t.DEPT_ID as dataId,'data' as type
+		FROM
+			ACCESS_DATA_POWER t
+		WHERE
+			t.USER_ID IN ('NOROLE'
+			<dynamic>
+				<isNotEmpty prepend="," property="userIds">
+					<iterate conjunction="," property="userIds">
+						#userIds[]#
+					</iterate>
+				</isNotEmpty>
+			</dynamic>
+			)
+		ORDER BY
+			t.USER_ID
+	</select>
+	<update id="update_user_psd" parameterClass="map">
+		UPDATE
+			USER_BASIC
+		SET
+			USER_PASSWORD = #password#
+		WHERE
+			USER_ID = #userId#
+	</update>
+	<delete id="remove_user_map_role" parameterClass="string">
+		DELETE FROM 
+			USER_MAP_ROLE
+		WHERE
+			USER_ID = #value#
+	</delete>
+	<insert id="insert_user_map_role" parameterClass="map">
+		INSERT INTO USER_MAP_ROLE
+			(MAPPING_ID,USER_ID,ROLE_ID)
+		VALUES
+			(#mappId#,#userId#,#roleId#)
+	</insert>
+	<delete id="remove_access_data_power" parameterClass="string">
+		DELETE FROM 
+			ACCESS_DATA_POWER
+		WHERE
+			USER_ID = #value#
+	</delete>
+	<insert id="insert_access_data_power" parameterClass="map">
+		INSERT INTO ACCESS_DATA_POWER
+			(MAPPING_ID,USER_ID,DEPT_ID)
+		VALUES
+			(#mappId#,#userId#,#deptId#)
+	</insert>
+	<select id="load_access_by_userId" parameterClass="string" resultClass="string">
+		SELECT
+			t.DEPT_ID
+		FROM
+			ACCESS_DATA_POWER t
+		WHERE
+			t.USER_ID = #value#
+	</select>
+	<select id="query_dataset_user_for_opts" resultClass="ComboxModel">
+		SELECT 
+			u.USER_ID AS regValue,u.USER_NAME AS displayValue,'user_set' AS storName
+		FROM
+			USER_BASIC u
+		WHERE
+			u.ENABLED = 1
+		<dynamic>
+			<isNotEmpty prepend=" AND" property="access_data_set">
+				<iterate open="u.DEPT_ID IN (" close=")" conjunction="," property="access_data_set">
+					#access_data_set[]#
+				</iterate>
+			</isNotEmpty>
+		</dynamic>
+	</select>
+</sqlMap>

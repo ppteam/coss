@@ -1,0 +1,104 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xml:lang="zh-CN" xmlns="http://www.w3.org/1999/xhtml" lang="zh-CN">
+<head>
+	<meta http-equiv="content-type" content="text/html; charset=UTF-8">
+	<title>工时信息管理系统-登录</title>
+	<link rel="Shortcut Icon" href="/workbase/clock.ico" />
+	<link  rel="Bookmark" href="/workbase/clock.ico">
+	<link type="text/css" rel="stylesheet" href="/workbase/resource/login/tb_index_css.css">
+	<link type="text/css" rel="stylesheet" href="/workbase/resource/login/sk_index_css.css">
+	<script language="javascript" src="/workbase/resource/login/mootools-1.js"></script>
+	<script language="javascript" src="/workbase/resource/login/mootools-1_002.js"></script>
+	<script language="javascript" src="/workbase/resource/login/index-js.js"></script>
+	<script language="javascript">
+		/**
+		 *{提交表单动作}
+		 */
+		function doSubmit(){
+			var userName = document.getElementById('j_username').value;
+			var password = document.getElementById('j_password').value;
+			if(userName === '' || password === ''){
+				window.alert('请输入帐号或者密码，谢谢');
+			}else{
+				document.forms['LoginForm'].submit();
+			}
+		} // end_fun
+
+		/**
+		 * 监听整个页面键盘事件
+		 */
+		document.onkeydown = function(evt){
+			var evt = window.event?window.event:evt;
+			if(evt.keyCode==13){
+				doSubmit();
+			}
+		};
+		
+		/*
+		 * This function parses ampersand-separated name=value argument pairs from
+		 * the query string of the URL. It stores the name=value pairs in
+		 * properties of an object and returns that object. Use it like this:
+		 *
+		 * var args = getArgs( );  // Parse args from URL
+		 * var q = args.q || "";  // Use argument, if defined, or a default value
+		 * var n = args.n ? parseInt(args.n) : 10;
+		 */
+		function getArgs() {
+		    var args = new Object( );
+		    var query = location.search.substring(1);     
+		    var pairs = query.split("&");                 
+		    for(var i = 0; i < pairs.length; i++) {
+		        var pos = pairs[i].indexOf('=');          
+		        if (pos == -1) continue;
+		        var argname = pairs[i].substring(0,pos);
+		        var value = pairs[i].substring(pos+1);
+		        value = decodeURIComponent(value);
+		        args[argname] = value;
+		    }
+		    return args;
+		}
+
+		function runLoad(){
+			var args = getArgs();
+			if(!(typeof args.err === 'undefined')){
+				if(args.err === '001'){
+					document.getElementById("err001").style.display = 'block';
+				}else if(args.err === '002'){
+					document.getElementById("err002").style.display = 'block';
+				}else{
+					document.getElementById("err").style.display = 'block';
+				}
+			}
+			// var url = window.location.href;
+			// if(url.indexOf('err') !== -1){} // end_if
+		} // end_fun
+	</script>
+</head>
+<body style="background-image: url('/workbase/resource/login/PNG8/bgimage.png');" onload="runLoad();">
+	<div style="left: 320px; top: 56px; display: block; visibility: visible; opacity: 1;" id="logon" class="logon">
+		<form name="LoginForm" method="post" action="/workbase/j_spring_security_check" >
+			<div id="tbLogonPanel" class="tbLogonPanel ">
+				<div id="err001" style='color:red;display:none;'>登录错误：请检查帐号、密码与IP地址是否正确.....</div>
+				<div id="err002" style='color:red;display:none;'>访问权限不足或者超时，请重新登录</div>
+				<div id="err" style='color:red;display:none;'>未知错误，请重新登录.....</div>
+				<div class="logonPanel">
+					<label>帐&nbsp;&nbsp;号:</label>
+					<div class="eleWrapper"><input name="j_username" value="" class="textfield" id="j_username" type="text"></div>
+					<label>密&nbsp;&nbsp;码:</label>
+					<div class="eleWrapper"><input name="j_password" value="" class="textfield" id="j_password" type="password"></div>
+				</div>
+				<div style="visibility: visible; opacity: 0.01; display: block;" id="logonSubmit" class="logonSubmit">
+				<input value="" type="button" onclick="doSubmit();"></div>
+			</div>
+			</form>
+		</div>
+		<div id="tbException" class="tbException tbExceptionSmall">
+			<div class="exceptionBody">
+				<div class="exceptionContent"></div>
+				<input value="" type="button">
+			</div>
+		</div>
+		<div style="width: 300px; height: 50px; display: block; visibility: visible; opacity: 0.15;" id="browserCompatibility" class="browserCompatibility" title="SkillBase V4.0对于IE6.0, IE7.0浏览器有良好的兼容性。我们推荐您使用IE7.0浏览器，并且工作在1024*768以上的分辨率下。">
+	</div>
+</body>
+</html>
