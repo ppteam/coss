@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+	<comment>
+		代码生成器配置文件: 
+		1.会为所有的property生成property_dir属性,如pkg=com.company => pkg_dir=com/company
+		2.可以引用环境变量: ${env.JAVA_HOME} or System.properties: ${user.home},property之间也可以相互引用
+		3.没有主键的表在生成时可能回出现异常,请手动修改
+	</comment>
+	
+	<!-- 指定模版目录路径 -->
+	<entry key="templateRootDir">template</entry>
+	<!-- 指定生成目标目录路径 -->
+	<entry key="outRoot">code</entry>
+	
+	<!-- 指定要生成的模块包名 -->
+	<entry key="basepackage">com.googlecode.coss.biz.base</entry>
+	<!-- 指定通用的DAO工具包 -->
+	<entry key="import_common">com.googlecode.coss.common.core.orm.mybatis</entry>
+	<!-- 指定项目包 -->
+	<entry key="import_project_package">com.googlecode.coss</entry>
+
+	<!-- 数据库配置 [用户, 密码, url, driver] -->
+	<entry key="jdbc.username">root</entry>
+	<entry key="jdbc.password"></entry>
+	
+	<entry key="jdbc.url">jdbc:mysql://localhost:3306/demo?useUnicode=true&amp;characterEncoding=UTF-8</entry>
+	<entry key="jdbc.driver">com.mysql.jdbc.Driver</entry>
+	
+	<!-- Oracle需要指定jdbc.schema,并且要大写，其它数据库忽略此项配置 -->
+	<!--
+	<entry key="jdbc.url">jdbc:oracle:thin:@10.20.149.40:1521:lp4pldev</entry>
+	<entry key="jdbc.driver">oracle.jdbc.driver.OracleDriver</entry>
+	<entry key="jdbc.schema">LPWL</entry>
+	<entry key="jdbc.catalog">LP4PLDEV</entry>
+	-->
+	
+	<!-- 需要移除的表名前缀,使用逗号进行分隔多个前缀,示例值: t_,v_ -->
+	<entry key="tableRemovePrefixes">Mfg$,Cus$,WL_</entry>
+	
+	<!-- 大小写分隔符的正则表达式  -->
+	<entry key="caseSeparatorPattern">\$|\_</entry>
+	
+	
+	<!-- 数据库类型至java类型映射  -->
+	<entry key="java_typemapping.java.sql.Timestamp">java.util.Date</entry>
+	<entry key="java_typemapping.java.sql.Date">java.util.Date</entry>
+	<entry key="java_typemapping.java.sql.Time">java.util.Date</entry>	
+	<entry key="java_typemapping.java.lang.Byte">Integer</entry>
+	<entry key="java_typemapping.java.lang.Short">Integer</entry>
+	<entry key="java_typemapping.java.math.BigDecimal">Long</entry>
+	<entry key="java_typemapping.java.sql.Clob">String</entry>
+</properties>
