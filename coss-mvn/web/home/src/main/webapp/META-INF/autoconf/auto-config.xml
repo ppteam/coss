@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<config description="自动配置：coss">
+	<group name="lp.basic.settings">
+		<property name="coss.basic.setting.workdir" defaultValue="/home/admin" description="description" />
+		<property name="coss.basic.setting.output" defaultValue="${coss.basic.setting.workdir}/output" description="description" />
+		<property name="coss.basic.setting.mode" defaultValue="dev" description="应用的部署状态（run, test, dev）" />
+	</group>
+
+	<group name="coss.deploy">
+		<property name="coss.deploy" defaultValue="${coss.basic.setting.workdir}/deploy" description="App 布署目录" />
+		<property name="coss.basic.logs" defaultValue="${coss.basic.setting.output}/logs" description="App 日志输出目录" />
+	</group>
+
+	<group name="coss.web.home">
+		<property name="coss.web.home" defaultValue="${coss.basic.setting.workdir}/web/home" description="App web home 主目录" />
+		<property name="coss.web.home.templates" defaultValue="${coss.web.home}/templates" description="App web home 模板目录" />
+	</group>
+
+	<script>
+		<generate template="log4j.xml.vm" destfile="WEB-INF/log4j.xml" charset="UTF-8" />
+		<generate template="web.xml.vm" destfile="WEB-INF/web.xml" charset="UTF-8" />
+	</script>
+</config>
