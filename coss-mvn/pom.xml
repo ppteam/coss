@@ -56,28 +56,14 @@
 		<jackson.version>1.5.2</jackson.version>
 		<slf4j.version>1.6.0</slf4j.version>
 		<hibernate.validator.version>4.1.0.Final</hibernate.validator.version>
-		<targetJdk>1.5</targetJdk>
+		<targetJdk>1.6</targetJdk>
 		<project.version>4.0.3</project.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<sourceEncoding>UTF-8</sourceEncoding>
 
 		<!-- plugin -->
-		<autoconfig-plugin-version>1.0.0</autoconfig-plugin-version>
-
-		<!-- ali -->
-		<webx3.version>3.0.6</webx3.version>
-		<dubbo.version>1.0.19</dubbo.version>
-		<dragoon.version>2.5.5</dragoon.version>
-		<aspectj.version>1.6.5</aspectj.version>
-		<persistence_dao.version>1.0.4</persistence_dao.version>
-		<hessian.version>3.2.0</hessian.version>
-		<ibatis.version>2.3.4.726-patch</ibatis.version>
-		<c3p0.version>0.9.1.2</c3p0.version>
-		<taobao_api.version>20110804</taobao_api.version>
-		<servlet.version>2.5</servlet.version>
-		<webx3_rpc.version>0.1.0</webx3_rpc.version>
-		<quartz.version>1.8.4</quartz.version>
+		<autoconfig-plugin-version>1.0.9</autoconfig-plugin-version>
 	</properties>
 
 
@@ -239,6 +225,11 @@
 				<groupId>commons-digester</groupId>
 				<artifactId>commons-digester</artifactId>
 				<version>2.0</version>
+			</dependency>
+			<dependency>
+			    <groupId>commons-httpclient</groupId>
+			    <artifactId>commons-httpclient</artifactId>
+			    <version>3.1</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-pool</groupId>
@@ -464,8 +455,8 @@
 				<artifactId>maven-compiler-plugin</artifactId>
 				<version>2.3.2</version>
 				<configuration>
-					<source>1.6</source>
-					<target>1.6</target>
+					<source>${targetJdk}</source>
+					<target>${targetJdk}</target>
 				</configuration>
 			</plugin>
 			<!-- resources plugin -->
@@ -511,6 +502,49 @@
 		</plugins>
 	</build>
 
+	<repositories>
+		<repository>
+			<id>offical</id>
+			<name>Maven Official Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>code.alibabatech.com</id>
+			<name>alibaba Repository</name>
+			<url>http://code.alibabatech.com/mvn/releases/</url>
+			<releases>
+				<enabled>true</enabled>
+			</releases>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</repository>
+		<repository>
+			<id>code.taobao.org</id>
+			<name>Repository of code.taobao.org</name>
+			<url>http://code.taobao.org/mvn/repository</url> 
+		</repository>
+	</repositories>
+	
+	<pluginRepositories>
+		<pluginRepository>
+			<id>offical</id>
+			<name>Maven Official Repository</name>
+			<url>http://repo1.maven.org/maven2</url>
+			<snapshots>
+				<enabled>false</enabled>
+			</snapshots>
+		</pluginRepository>
+		<pluginRepository>
+			<id>code.taobao.org</id>
+			<name>Repository of code.taobao.org</name>
+			<url>http://code.taobao.org/mvn/repository</url> 
+		</pluginRepository>
+	</pluginRepositories>
+
 	<!--
 	<repositories>
 		<repository>
@@ -542,17 +576,23 @@
 				<enabled>false</enabled>
 			</snapshots>
 		</repository>
-		<repository>
-			<id>code.taobao.org</id>
-			<name>taocodeReleases</name>
-			<url>http://code.taobao.org/mvn/repositories/releases/</url>
-			<releases>
-				<enabled>true</enabled>
-			</releases>
-			<snapshots>
-				<enabled>false</enabled>
-			</snapshots>
-		</repository>
+		
+		<repositories>
+			<repository>
+				<id>code.taobao.org</id>
+				<name>Repository of code.taobao.org</name>
+				<url>http://code.taobao.org/mvn/repository</url> 
+			</repository>
+		</repositories>
+		
+		<pluginRepositories>
+			<pluginRepository>
+				<id>code.taobao.org</id>
+				<name>Repository of code.taobao.org</name>
+				<url>http://code.taobao.org/mvn/repository</url> 
+				<layout>default</layout>
+			</pluginRepository>
+		</pluginRepositories>
 
 		<repository>
 			<id>apache.m2.incubator</id>
