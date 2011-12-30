@@ -63,7 +63,7 @@
 		<sourceEncoding>UTF-8</sourceEncoding>
 
 		<!-- plugin -->
-		<autoconfig-plugin-version>1.0.9</autoconfig-plugin-version>
+		<autoconfig-plugin-version>1.0.10</autoconfig-plugin-version>
 	</properties>
 
 
@@ -544,7 +544,7 @@
 			<url>http://code.taobao.org/mvn/repository</url> 
 		</pluginRepository>
 	</pluginRepositories>
-
+	
 	<!--
 	<repositories>
 		<repository>
