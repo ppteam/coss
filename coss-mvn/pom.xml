@@ -227,9 +227,9 @@
 				<version>2.0</version>
 			</dependency>
 			<dependency>
-			    <groupId>commons-httpclient</groupId>
-			    <artifactId>commons-httpclient</artifactId>
-			    <version>3.1</version>
+				<groupId>commons-httpclient</groupId>
+				<artifactId>commons-httpclient</artifactId>
+				<version>3.1</version>
 			</dependency>
 			<dependency>
 				<groupId>commons-pool</groupId>
@@ -364,11 +364,11 @@
 				<artifactId>ehcache</artifactId>
 				<version>1.6.2</version>
 			</dependency>
-      <dependency>
-        <groupId>net.sf.oval</groupId>
-        <artifactId>oval</artifactId>
-        <version>1.70</version>
-      </dependency>
+			<dependency>
+				<groupId>net.sf.oval</groupId>
+				<artifactId>oval</artifactId>
+				<version>1.70</version>
+			</dependency>
 			<dependency>
 				<groupId>asm</groupId>
 				<artifactId>asm</artifactId>
@@ -525,10 +525,10 @@
 		<repository>
 			<id>code.taobao.org</id>
 			<name>Repository of code.taobao.org</name>
-			<url>http://code.taobao.org/mvn/repository</url> 
+			<url>http://code.taobao.org/mvn/repository</url>
 		</repository>
 	</repositories>
-	
+
 	<pluginRepositories>
 		<pluginRepository>
 			<id>offical</id>
@@ -541,7 +541,7 @@
 		<pluginRepository>
 			<id>code.taobao.org</id>
 			<name>Repository of code.taobao.org</name>
-			<url>http://code.taobao.org/mvn/repository</url> 
+			<url>http://code.taobao.org/mvn/repository</url>
 		</pluginRepository>
 	</pluginRepositories>
 	
