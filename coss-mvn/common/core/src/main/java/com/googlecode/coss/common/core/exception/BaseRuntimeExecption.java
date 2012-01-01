@@ -9,6 +9,7 @@ import com.googlecode.coss.common.core.context.MessageSourceHolder;
  */
 public abstract class BaseRuntimeExecption extends RuntimeException implements SysExecption {
 
+    private static final long serialVersionUID = 5776160687616891284L;
     protected String errorCode;
     protected String errorMessage;
 

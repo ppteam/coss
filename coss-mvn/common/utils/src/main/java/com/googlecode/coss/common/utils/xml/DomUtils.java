@@ -202,6 +202,7 @@ public abstract class DomUtils {
      * Matches the given node's name and local name against the given desired
      * names.
      */
+    @SuppressWarnings("rawtypes")
     private static boolean nodeNameMatch(Node node, Collection desiredNames) {
         return (desiredNames.contains(node.getNodeName()) || desiredNames.contains(node
                 .getLocalName()));

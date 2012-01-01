@@ -21,6 +21,7 @@ import com.googlecode.coss.common.utils.lang.StringUtils;
  * A DataSoure is inside JdbcTemplate
  * </p>
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class JdbcTemplate {
 
     private static boolean      showSql      = true;
@@ -564,7 +565,6 @@ public class JdbcTemplate {
      * @return
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
     public List query(final String sql, RowMapper rowMapper) {
         return query(sql, null, null, rowMapper);
     }
@@ -580,7 +580,6 @@ public class JdbcTemplate {
      * @return
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
     public List query(final String sql, Object[] args, RowMapper rowMapper) {
         return query(sql, args, null, rowMapper);
     }
@@ -597,7 +596,6 @@ public class JdbcTemplate {
      * @return
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
     public List query(final String sql, Object[] args, int[] sqlTypes, RowMapper rowMapper) {
         if (showSql) {
             logger.info(getFinalSql(sql, args, sqlTypes));
@@ -1349,7 +1347,6 @@ public class JdbcTemplate {
      * @return
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
     public static List query(Connection conn, final String sql, RowMapper rowMapper, int timeout) {
         return new JdbcTemplate(conn, timeout).query(sql, rowMapper);
     }
@@ -1365,7 +1362,6 @@ public class JdbcTemplate {
      * @return
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
     public static List query(Connection conn, final String sql, RowMapper rowMapper) {
         return new JdbcTemplate(conn).query(sql, rowMapper);
     }
@@ -1383,7 +1379,6 @@ public class JdbcTemplate {
      * @return
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
     public static List query(Connection conn, final String sql, Object[] args, RowMapper rowMapper,
                              int timeout) {
         return new JdbcTemplate(conn, timeout).query(sql, args, rowMapper);
@@ -1401,7 +1396,6 @@ public class JdbcTemplate {
      * @return
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
     public static List query(Connection conn, final String sql, Object[] args, RowMapper rowMapper) {
         return new JdbcTemplate(conn).query(sql, args, rowMapper);
     }
@@ -1420,7 +1414,6 @@ public class JdbcTemplate {
      * @return
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
     public static List query(Connection conn, final String sql, Object[] args, int[] sqlTypes,
                              RowMapper rowMapper, int timeout) {
         return new JdbcTemplate(conn, timeout).query(sql, args, sqlTypes, rowMapper);
@@ -1439,7 +1432,6 @@ public class JdbcTemplate {
      * @return
      * @throws SQLException
      */
-    @SuppressWarnings("unchecked")
     public static List query(Connection conn, final String sql, Object[] args, int[] sqlTypes,
                              RowMapper rowMapper) {
         return new JdbcTemplate(conn).query(sql, args, sqlTypes, rowMapper);
@@ -1509,7 +1501,6 @@ public class JdbcTemplate {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public static List queryObjectListUseReflection(Class<?> type, Connection conn,
                                                     final String sql, Object[] args, int[] sqlTypes)
             throws Exception {
@@ -1528,7 +1519,6 @@ public class JdbcTemplate {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public static List queryObjectListUseReflection(Class<?> type, Connection conn,
                                                     final String sql, Object[] args)
             throws Exception {
@@ -1546,7 +1536,6 @@ public class JdbcTemplate {
      * @return
      * @throws Exception
      */
-    @SuppressWarnings("unchecked")
     public static List queryObjectListUseReflection(Class<?> type, Connection conn, final String sql)
             throws Exception {
         return new JdbcTemplate(conn).queryObjectListUseReflection(type, sql);

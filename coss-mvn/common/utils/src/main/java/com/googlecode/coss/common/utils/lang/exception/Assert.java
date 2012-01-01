@@ -8,6 +8,7 @@ import com.googlecode.coss.common.utils.collections.CollectionUtils;
 import com.googlecode.coss.common.utils.lang.StringUtils;
 import com.googlecode.coss.common.utils.lang.reflect.ObjectUtils;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class Assert {
 
     public static void isTrue(boolean expression, String message) {

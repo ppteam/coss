@@ -167,7 +167,7 @@ public class ReflectionHelper {
      *         determined
      */
     @SuppressWarnings("unchecked")
-    public static <T> Class<T> getSuperClassGenricType(final Class clazz) {
+    public static <T> Class<T> getSuperClassGenricType(final Class<?> clazz) {
         return getSuperClassGenricType(clazz, 0);
     }
 
@@ -180,7 +180,7 @@ public class ReflectionHelper {
      * @return the index generic declaration, or Object.class if cannot be
      *         determined
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public static Class getSuperClassGenricType(final Class clazz, final int index) {
 
         Type genType = clazz.getGenericSuperclass();
@@ -212,7 +212,7 @@ public class ReflectionHelper {
      * @param collection 来源集合.
      * @param propertyName 要提取的属性名.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public static List convertElementPropertyToList(final Collection collection,
                                                     final String propertyName) {
         List list = new ArrayList();
@@ -235,7 +235,7 @@ public class ReflectionHelper {
      * @param propertyName 要提取的属性名.
      * @param separator 分隔符.
      */
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings("rawtypes")
     public static String convertElementPropertyToString(final Collection collection,
                                                         final String propertyName,
                                                         final String separator) {

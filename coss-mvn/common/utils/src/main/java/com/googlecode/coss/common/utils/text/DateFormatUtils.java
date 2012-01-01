@@ -13,6 +13,7 @@ import com.googlecode.coss.common.utils.lang.StringUtils;
  * DateFormat operation
  * </p>
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class DateFormatUtils {
 
     /**

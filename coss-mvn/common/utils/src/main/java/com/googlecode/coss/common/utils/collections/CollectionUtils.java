@@ -17,6 +17,7 @@ import com.googlecode.coss.common.utils.lang.reflect.ObjectUtils;
  * 
  *
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class CollectionUtils<E> {
 
     /**
@@ -61,7 +62,6 @@ public class CollectionUtils<E> {
      * @param array the array to merge (may be <code>null</code>)
      * @param collection the target Collection to merge the array into
      */
-    @SuppressWarnings("unchecked")
     public static void mergeArrayIntoCollection(Object array, Collection collection) {
         if (collection == null) {
             throw new IllegalArgumentException("Collection must not be null");
@@ -82,7 +82,6 @@ public class CollectionUtils<E> {
      * @param props the Properties instance to merge (may be <code>null</code>)
      * @param map the target Map to merge the properties into
      */
-    @SuppressWarnings("unchecked")
     public static void mergePropertiesIntoMap(Properties props, Map map) {
         if (map == null) {
             throw new IllegalArgumentException("Map must not be null");
@@ -209,7 +208,6 @@ public class CollectionUtils<E> {
      * @return a value of the given type found if there is a clear match, or
      *         <code>null</code> if none or more than one such value found
      */
-    @SuppressWarnings("unchecked")
     public static <T> T findValueOfType(Collection<?> collection, Class<T> type) {
         if (isEmpty(collection)) {
             return null;

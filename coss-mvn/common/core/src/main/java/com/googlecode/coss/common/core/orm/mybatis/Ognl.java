@@ -9,6 +9,7 @@ import com.googlecode.coss.common.utils.lang.StringUtils;
 /**
  * mybatis mapper.xml 解析加强工具 一些常用判断
  */
+@SuppressWarnings({ "rawtypes" })
 public class Ognl {
 
     public static boolean isEmpty(Object o) throws IllegalArgumentException {

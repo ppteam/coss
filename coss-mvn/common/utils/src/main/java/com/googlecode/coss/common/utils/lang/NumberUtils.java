@@ -15,6 +15,7 @@ import com.googlecode.coss.common.utils.lang.exception.Assert;
  * Number operation
  * </p>
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class NumberUtils {
 
     /**
@@ -34,7 +35,6 @@ public class NumberUtils {
      * @see java.lang.Double
      * @see java.math.BigDecimal
      */
-    @SuppressWarnings("unchecked")
     public static <T extends Number> T convertNumberToTargetClass(Number number,
                                                                   Class<T> targetClass)
             throws IllegalArgumentException {
@@ -122,7 +122,6 @@ public class NumberUtils {
      * @see java.lang.Double#valueOf
      * @see java.math.BigDecimal#BigDecimal(String)
      */
-    @SuppressWarnings("unchecked")
     public static <T extends Number> T parseNumber(String text, Class<T> targetClass) {
         Assert.notNull(text, "Text must not be null");
         Assert.notNull(targetClass, "Target class must not be null");

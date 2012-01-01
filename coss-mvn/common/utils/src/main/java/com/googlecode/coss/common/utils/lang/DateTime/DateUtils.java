@@ -12,6 +12,7 @@ import java.util.Map;
 
 import com.googlecode.coss.common.utils.text.DateFormatUtils;
 
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class DateUtils {
 
     /**

@@ -19,6 +19,7 @@ import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 /**
  * session工厂类
  */
+@SuppressWarnings("rawtypes")
 public class MybatisSessionFactory implements FactoryBean, InitializingBean {
     private String            configLocation;
 

@@ -33,6 +33,7 @@ import com.googlecode.coss.common.utils.text.DateFormatUtils;
  * Java Bean Operation
  * </p>
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ReflectUtils {
 
     /**

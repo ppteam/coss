@@ -13,18 +13,22 @@ import com.googlecode.coss.common.core.helper.PageHelper;
  */
 public class Page<T> implements Serializable, Iterable<T> {
 
-    protected List<T> result;
+    private static final long serialVersionUID = -3696776871478227443L;
 
-    protected int     pageSize;
+    protected List<T>         result;
 
-    protected int     pageNumber;
+    protected int             pageSize;
 
-    protected int     totalCount = 0;
+    protected int             pageNumber;
 
+    protected int             totalCount       = 0;
+
+    @SuppressWarnings("rawtypes")
     public Page(QueryRequest p, int totalCount) {
         this(p.getPageNumber(), p.getPageSize(), totalCount);
     }
 
+    @SuppressWarnings({ "unchecked", "rawtypes" })
     public Page(int pageNumber, int pageSize, int totalCount) {
         this(pageNumber, pageSize, totalCount, new ArrayList(0));
     }
@@ -167,6 +171,7 @@ public class Page<T> implements Serializable, Iterable<T> {
      * 
      * @return
      */
+    @SuppressWarnings("unchecked")
     public List<Integer> getLinkPageNumbers() {
         return PageHelper.generateLinkPageNumbers(getThisPageNumber(), getLastPageNumber(), 10);
     }
@@ -176,6 +181,7 @@ public class Page<T> implements Serializable, Iterable<T> {
      * 
      * @return
      */
+    @SuppressWarnings("unchecked")
     public List<Integer> getLinkPageNumbers(int count) {
         return PageHelper.generateLinkPageNumbers(getThisPageNumber(), getLastPageNumber(), count);
     }
@@ -189,6 +195,7 @@ public class Page<T> implements Serializable, Iterable<T> {
         return PageHelper.getFirstResult(pageNumber, pageSize);
     }
 
+    @SuppressWarnings("unchecked")
     public Iterator<T> iterator() {
         return (Iterator<T>) (result == null ? Collections.emptyList().iterator() : result
                 .iterator());

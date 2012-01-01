@@ -24,7 +24,7 @@ public class BeanHelper {
         return null;
     }
 
-    public static Object copyProperties(Class destClass, Object orig) {
+    public static Object copyProperties(Class<?> destClass, Object orig) {
         Object target = null;
         try {
             target = destClass.newInstance();
@@ -52,7 +52,7 @@ public class BeanHelper {
         }
     }
 
-    public static Map describe(Object bean) {
+    public static Map<?, ?> describe(Object bean) {
         try {
             return b.describe(bean);
         } catch (Exception e) {
@@ -146,7 +146,7 @@ public class BeanHelper {
         return null;
     }
 
-    public static void populate(Object bean, Map properties) {
+    public static void populate(Object bean, Map<?,?> properties) {
         try {
             b.populate(bean, properties);
         } catch (Exception e) {

@@ -15,6 +15,7 @@ public class PageHelper {
             return (pageNumber - 1) * pageSize;
     }
 
+    @SuppressWarnings("rawtypes")
     public static List generateLinkPageNumbers(int currentPageNumber, int lastPageNumber, int count) {
         int avg = count / 2;
         int startPageNumber = currentPageNumber - avg;
@@ -28,7 +29,7 @@ public class PageHelper {
             if (startPageNumber <= 0)
                 startPageNumber = 1;
         }
-        List result = new ArrayList();
+        List<Integer> result = new ArrayList<Integer>();
         for (int i = startPageNumber; i <= endPageNumber; i++)
             result.add(new Integer(i));
 

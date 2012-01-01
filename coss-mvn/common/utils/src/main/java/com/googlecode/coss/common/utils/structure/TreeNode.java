@@ -8,12 +8,13 @@ import java.util.List;
  * 多叉树的数据结构
  */
 public class TreeNode implements Serializable {
-    private int              parentId;
-    private int              selfId;
-    protected String         nodeName;
-    protected Object         obj;
-    protected TreeNode       parentNode;
-    protected List<TreeNode> childList;
+    private static final long serialVersionUID = 4158979303437605449L;
+    private int               parentId;
+    private int               selfId;
+    protected String          nodeName;
+    protected Object          obj;
+    protected TreeNode        parentNode;
+    protected List<TreeNode>  childList;
 
     public TreeNode() {
         initChildList();

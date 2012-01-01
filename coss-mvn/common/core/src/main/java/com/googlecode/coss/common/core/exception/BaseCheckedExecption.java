@@ -5,6 +5,7 @@ package com.googlecode.coss.common.core.exception;
  */
 public abstract class BaseCheckedExecption extends Exception implements SysExecption {
 
+    private static final long serialVersionUID = 6754315539095937550L;
     protected String errorCode;
     protected String errorMessage;
 

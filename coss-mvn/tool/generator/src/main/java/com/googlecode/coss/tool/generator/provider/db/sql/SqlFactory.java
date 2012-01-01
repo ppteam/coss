@@ -40,7 +40,9 @@ import com.googlecode.coss.tool.generator.util.typemapping.JdbcType;
  */
 public class SqlFactory {
 
+    @SuppressWarnings("unused")
     private List<SqlParameter> customParameters = new ArrayList<SqlParameter>();
+    @SuppressWarnings("unused")
     private List<Column>       customColumns    = new ArrayList<Column>();
 
     public SqlFactory() {
@@ -116,6 +118,7 @@ public class SqlFactory {
 
     public class SelectColumnsParser {
 
+        @SuppressWarnings({ "unchecked", "rawtypes" })
         private LinkedHashSet<Column> convert2Columns(Sql sql, ResultSetMetaData metadata)
                 throws SQLException, Exception {
             if (metadata == null)
@@ -298,18 +301,12 @@ public class SqlFactory {
         //    	SelectSqlMetaData t6 = new SqlQueryFactory().getByQuery("select username,password,role_desc from user_info,role where user_info.user_id = role.user_id and username=? and password =? limit ?,?");
         //    	SelectSqlMetaData t7 = new SqlQueryFactory().getByQuery("select username,password,count(role_desc) role_desc_cnt from user_info,role where user_info.user_id = role.user_id group by username");
         //    
-        Sql n2 = new SqlFactory()
-                .parseSql("select user_info.username,password pwd from user_info where username=:username and password =:password");
-        Sql n3 = new SqlFactory()
-                .parseSql("select username,password,role.role_name,role_desc from user_info,role where user_info.user_id = role.user_id and username=:username and password =:password");
-        Sql n4 = new SqlFactory()
-                .parseSql("select count(*) cnt from user_info,role where user_info.user_id = role.user_id and username=:username and password =:password");
-        Sql n5 = new SqlFactory()
-                .parseSql("select sum(age) from user_info,role where user_info.user_id = role.user_id and username=:username and password =:password");
-        Sql n7 = new SqlFactory()
-                .parseSql("select username,password,count(role_desc) role_desc_cnt from user_info,role where user_info.user_id = role.user_id group by username");
-        Sql n8 = new SqlFactory()
-                .parseSql("select username,password,count(role_desc) role_desc_cnt from user_info,role where user_info.user_id = :userId group by username");
+        //        Sql n2 = new SqlFactory().parseSql("select user_info.username,password pwd from user_info where username=:username and password =:password");
+        //        Sql n3 = new SqlFactory().parseSql("select username,password,role.role_name,role_desc from user_info,role where user_info.user_id = role.user_id and username=:username and password =:password");
+        //        Sql n4 = new SqlFactory().parseSql("select count(*) cnt from user_info,role where user_info.user_id = role.user_id and username=:username and password =:password");
+        //        Sql n5 = new SqlFactory().parseSql("select sum(age) from user_info,role where user_info.user_id = role.user_id and username=:username and password =:password");
+        //        Sql n7 = new SqlFactory().parseSql("select username,password,count(role_desc) role_desc_cnt from user_info,role where user_info.user_id = role.user_id group by username");
+        //        Sql n8 = new SqlFactory().parseSql("select username,password,count(role_desc) role_desc_cnt from user_info,role where user_info.user_id = :userId group by username");
         new SqlFactory()
                 .parseSql("select username,password,role_desc from user_info,role where user_info.user_id = role.user_id and username=:username and password =:password and birth_date between :birthDateBegin and :birthDateEnd");
         new SqlFactory()

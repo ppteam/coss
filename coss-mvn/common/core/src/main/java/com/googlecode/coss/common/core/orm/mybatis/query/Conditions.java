@@ -2,8 +2,6 @@ package com.googlecode.coss.common.core.orm.mybatis.query;
 
 public class Conditions {
 
-    private static final long serialVersionUID = -1418466738933333523L;
-
     public String toString() {
         StringBuilder sb = new StringBuilder().append(condition.toString()).append(' ')
                 .append(fieldName).append(' ').append(compare.getValue()).append(' ').append(value)
@@ -79,6 +77,7 @@ public class Conditions {
 
     private Condition condition;
     private Compare   compare;
+    @SuppressWarnings("unused")
     private boolean   ignoreCase;
     private String    fieldName;
     private Object    value;

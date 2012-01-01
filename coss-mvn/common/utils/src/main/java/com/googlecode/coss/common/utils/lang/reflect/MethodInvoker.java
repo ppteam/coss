@@ -12,6 +12,7 @@ import java.lang.reflect.Modifier;
  * optionally specify arguments, prepare the invoker. Afterwards, you may invoke
  * the method any number of times, obtaining the invocation result.
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class MethodInvoker {
 
     private Class    targetClass;

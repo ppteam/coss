@@ -146,20 +146,20 @@ public abstract class BaseSqlMapDao<T extends BaseDataObject, PK extends Seriali
         return list;
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Page<T> findPage(String findPageStatement, QueryRequest queryRequest) {
         return pageQuery(getSqlSession(), getStatement(findPageStatement), getCountStatement(),
                 queryRequest);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Page<T> findPage(String findPageStatement, String countStatement,
                             QueryRequest queryRequest) {
         return pageQuery(getSqlSession(), getStatement(findPageStatement),
                 getStatement(countStatement), queryRequest);
     }
 
-    @SuppressWarnings("unchecked")
+    @SuppressWarnings({ "rawtypes", "unchecked" })
     public Page<T> findPage(QueryRequest queryRequest) {
         return pageQuery(getSqlSession(), getFindPageStatement(), getCountStatement(), queryRequest);
     }

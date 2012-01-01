@@ -23,6 +23,7 @@ import org.springframework.core.io.Resource;
 import org.springframework.jdbc.datasource.TransactionAwareDataSourceProxy;
 import org.springframework.util.Assert;
 
+@SuppressWarnings("rawtypes")
 public class SqlSessionFactoryFactoryBean implements FactoryBean, InitializingBean {
     protected static final Logger logger                        = LoggerFactory
                                                                         .getLogger(SqlSessionFactoryFactoryBean.class);

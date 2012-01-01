@@ -10,6 +10,7 @@ import java.util.Arrays;
  * href="http://jakarta.apache.org/commons/lang/">Jakarta's Commons Lang</a> for
  * a more comprehensive suite of object utilities.
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public abstract class ObjectUtils {
 
     private static final int    INITIAL_HASH            = 7;

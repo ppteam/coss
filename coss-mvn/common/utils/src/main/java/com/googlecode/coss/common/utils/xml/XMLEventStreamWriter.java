@@ -204,6 +204,7 @@ class XMLEventStreamWriter implements XMLStreamWriter {
         endElements.add(eventFactory.createEndElement(startElement.getName(), null));
     }
 
+    @SuppressWarnings("rawtypes")
     private void writeNamespace(Namespace namespace) throws XMLStreamException {
         int last = endElements.size() - 1;
         EndElement oldEndElement = endElements.get(last);

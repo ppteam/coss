@@ -28,6 +28,7 @@ import com.googlecode.coss.common.utils.lang.exception.Assert;
  * Class operation
  * </p>
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class ClassUtils {
 
     /** Suffix for array class names: "[]" */

@@ -39,6 +39,7 @@ import javax.xml.stream.events.XMLEvent;
  * @since 3.0
  * @see StaxUtils#createEventStreamReader(javax.xml.stream.XMLEventReader)
  */
+@SuppressWarnings({ "rawtypes" })
 class XMLEventStreamReader extends AbstractXMLStreamReader {
 
     private XMLEvent             event;

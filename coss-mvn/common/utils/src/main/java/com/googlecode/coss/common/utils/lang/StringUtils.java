@@ -27,6 +27,7 @@ import com.googlecode.coss.common.utils.lang.reflect.ObjectUtils;
  * String operation
  * </p>
  */
+@SuppressWarnings({ "rawtypes", "unchecked" })
 public class StringUtils {
 
     /**
@@ -38,10 +39,13 @@ public class StringUtils {
 
     private static final String FOLDER_SEPARATOR         = "/";
 
+    @SuppressWarnings("unused")
     private static final String WINDOWS_FOLDER_SEPARATOR = "\\";
 
+    @SuppressWarnings("unused")
     private static final String TOP_PATH                 = "..";
 
+    @SuppressWarnings("unused")
     private static final String CURRENT_PATH             = ".";
 
     private static final char   EXTENSION_SEPARATOR      = '.';
@@ -2613,4 +2617,5 @@ public class StringUtils {
         }
         return count;
     }
+
 }

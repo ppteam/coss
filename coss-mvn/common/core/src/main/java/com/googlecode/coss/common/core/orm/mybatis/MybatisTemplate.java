@@ -33,6 +33,7 @@ public class MybatisTemplate extends JdbcAccessor {
     }
 
     /** */
+    @SuppressWarnings("rawtypes")
     public List executeFind(SqlSessionCallback callback) {
         return (List) execute(callback);
     }
@@ -98,6 +99,7 @@ public class MybatisTemplate extends JdbcAccessor {
     }
 
     /** 查询分页 */
+    @SuppressWarnings("rawtypes")
     public List selectList(final String statement, final Object param, final RowBounds bounds) {
         return executeFind(new SqlSessionCallback() {
             public Object doInSqlSession(SqlSession session) {
@@ -116,16 +118,19 @@ public class MybatisTemplate extends JdbcAccessor {
     }
 
     /** 条件分页 */
+    @SuppressWarnings("rawtypes")
     public List selectList(final String statement, final Object param, int skip, int limit) {
         return selectList(statement, param, new RowBounds(skip, limit));
     }
 
     /** 查询不分页 */
+    @SuppressWarnings("rawtypes")
     public List selectList(final String statement, final Object param) {
         return selectList(statement, param, null);
     }
 
     /** 查询不带条件 */
+    @SuppressWarnings("rawtypes")
     public List selectList(final String statement) {
         return selectList(statement, null);
     }

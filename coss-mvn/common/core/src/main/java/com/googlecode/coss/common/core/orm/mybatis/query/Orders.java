@@ -30,6 +30,7 @@ public class Orders implements Serializable {
     }
 
     private boolean ascending;
+    @SuppressWarnings("unused")
     private boolean ignoreCase;
     private String  propertyName;
 

@@ -17,8 +17,6 @@
 package com.googlecode.coss.common.utils.xml;
 
 import java.util.Iterator;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 import javax.xml.namespace.QName;
 import javax.xml.stream.Location;
@@ -60,17 +58,16 @@ import com.googlecode.coss.common.utils.lang.exception.Assert;
  * @see #setErrorHandler(org.xml.sax.ErrorHandler)
  * @since 3.0
  */
+@SuppressWarnings({ "rawtypes" })
 class StaxEventXMLReader extends AbstractStaxXMLReader {
 
-    private static final String       DEFAULT_XML_VERSION = "1.0";
+    private static final String  DEFAULT_XML_VERSION = "1.0";
 
-    private final XMLEventReader      reader;
+    private final XMLEventReader reader;
 
-    private final Map<String, String> namespaces          = new LinkedHashMap<String, String>();
+    private String               xmlVersion          = DEFAULT_XML_VERSION;
 
-    private String                    xmlVersion          = DEFAULT_XML_VERSION;
-
-    private String                    encoding;
+    private String               encoding;
 
     /**
      * Constructs a new instance of the <code>StaxEventXmlReader</code> that

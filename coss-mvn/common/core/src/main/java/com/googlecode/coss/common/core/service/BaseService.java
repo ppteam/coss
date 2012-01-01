@@ -49,7 +49,7 @@ public abstract class BaseService<T extends BaseDataObject, PK extends Serializa
     }
 
     @Transactional(readOnly = true)
-    protected Page<T> findPage(QueryRequest pr) {
+    protected Page<T> findPage(QueryRequest<?> pr) {
         return getSqlMapDao().findPage(pr);
     }
 

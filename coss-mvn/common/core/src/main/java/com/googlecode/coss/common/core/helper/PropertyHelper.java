@@ -27,7 +27,7 @@ public class PropertyHelper {
         }
     }
 
-    public static Map describe(Object bean) {
+    public static Map<?,?> describe(Object bean) {
         try {
             return org.apache.commons.beanutils.PropertyUtils.describe(bean);
         } catch (Exception e) {
@@ -99,7 +99,7 @@ public class PropertyHelper {
         }
     }
 
-    public static PropertyDescriptor[] getPropertyDescriptors(Class beanClass) {
+    public static PropertyDescriptor[] getPropertyDescriptors(Class<?> beanClass) {
         return org.apache.commons.beanutils.PropertyUtils.getPropertyDescriptors(beanClass);
     }
 
@@ -107,7 +107,7 @@ public class PropertyHelper {
         return org.apache.commons.beanutils.PropertyUtils.getPropertyDescriptors(bean);
     }
 
-    public static Class getPropertyEditorClass(Object bean, String name) {
+    public static Class<?> getPropertyEditorClass(Object bean, String name) {
         try {
             return org.apache.commons.beanutils.PropertyUtils.getPropertyEditorClass(bean, name);
         } catch (Exception e) {
@@ -116,7 +116,7 @@ public class PropertyHelper {
         }
     }
 
-    public static Class getPropertyType(Object bean, String name) {
+    public static Class<?> getPropertyType(Object bean, String name) {
         try {
             return org.apache.commons.beanutils.PropertyUtils.getPropertyType(bean, name);
         } catch (Exception e) {

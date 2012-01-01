@@ -57,6 +57,7 @@ public interface SqlMapDao<T, PK extends Serializable> {
      * @param queryRequest
      * @return
      */
+    @SuppressWarnings("rawtypes")
     public List<T> find(QueryRequest queryRequest);
 
     /**
@@ -74,6 +75,7 @@ public interface SqlMapDao<T, PK extends Serializable> {
      * @param queryRequest 分页参数,查询条件,排序条件
      * @return
      */
+    @SuppressWarnings("rawtypes")
     public Page<T> findPage(QueryRequest queryRequest);
 
     /**
@@ -83,6 +85,7 @@ public interface SqlMapDao<T, PK extends Serializable> {
      * @param queryRequest 分页参数,查询条件,排序条件
      * @return
      */
+    @SuppressWarnings("rawtypes")
     public Page<T> findPage(String findPageStatement, QueryRequest queryRequest);
 
     /**
@@ -93,6 +96,7 @@ public interface SqlMapDao<T, PK extends Serializable> {
      * @param queryRequest 分页参数,查询条件,排序条件
      * @return
      */
+    @SuppressWarnings("rawtypes")
     public Page<T> findPage(String findPageStatement, String countStatement,
                             QueryRequest queryRequest);
 
