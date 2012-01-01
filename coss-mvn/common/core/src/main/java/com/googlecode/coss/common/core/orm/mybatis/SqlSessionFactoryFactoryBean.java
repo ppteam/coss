@@ -40,6 +40,7 @@ public class SqlSessionFactoryFactoryBean implements FactoryBean, InitializingBe
         sqlSessionFactory = createSqlSessionFactory();
     }
 
+    @SuppressWarnings("deprecation")
     private SqlSessionFactory createSqlSessionFactory() throws IOException {
         Reader reader = new InputStreamReader(getConfigLocation().getInputStream());
         try {
