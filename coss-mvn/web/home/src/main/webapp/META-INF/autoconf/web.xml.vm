@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+
+<web-app version="2.4" xmlns="http://java.sun.com/xml/ns/j2ee" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://java.sun.com/xml/ns/j2ee  http://java.sun.com/xml/ns/j2ee/web-app_2_4.xsd">
+    <context-param>
+        <param-name>loggingRoot</param-name>
+        <param-value>${coss_basic_logs}</param-value>
+    </context-param>
+    <context-param>
+        <param-name>loggingLevel</param-name>
+        <param-value>INFO</param-value>
+    </context-param>
+    <context-param>
+        <param-name>loggingCharset</param-name>
+        <param-value>UTF-8</param-value>
+    </context-param>
+	<context-param>
+        <param-name>logSystem</param-name>
+        <param-value>log4j</param-value>
+    </context-param>
+	
+	<mime-mapping>
+		<extension>xls</extension>
+		<mime-type>application/msexcel</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>rar</extension>
+		<mime-type>application/rar</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>zip</extension>
+		<mime-type>application/zip</mime-type>
+	</mime-mapping>
+	<mime-mapping>
+		<extension>xlsx</extension>
+		<mime-type>application/vnd.openxmlformats-officedocument.spreadsheetml.sheet</mime-type>
+	</mime-mapping>
+</web-app>
