@@ -1,10 +1,13 @@
 package com.googlecode.coss.common.core.helper;
 
+import java.io.File;
+import java.io.FileInputStream;
 import java.io.Reader;
 import java.io.StringReader;
 import java.io.StringWriter;
 
 import javax.xml.bind.JAXBContext;
+import javax.xml.bind.JAXBElement;
 import javax.xml.bind.JAXBException;
 import javax.xml.bind.Marshaller;
 import javax.xml.bind.Unmarshaller;
@@ -70,6 +73,26 @@ public class JaxbHelper {
             Unmarshaller u = jc.createUnmarshaller();
             Reader sr = new StringReader(xmlStr);
             obj = u.unmarshal(sr);
+        } catch (Exception e) {
+            handleException(e);
+        }
+        return obj;
+    }
+
+    /**
+     * 解析 XML 文件 为 Object
+     * 
+     * @param xmlFile
+     * @return Object
+     * @throws JAXBException
+     */
+    public static Object parseXml(File xmlFile, Class<?> clazz) {
+        JAXBContext jc;
+        Object obj = null;
+        try {
+            jc = JAXBContext.newInstance(clazz);
+            Unmarshaller u = jc.createUnmarshaller();
+            obj = u.unmarshal(new FileInputStream(xmlFile));
         } catch (Exception e) {
             handleException(e);
         }
